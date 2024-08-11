@@ -60,12 +60,10 @@ class MainTileService : SuspendingTileService() {
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
-        val root: LayoutElementBuilders.LayoutElement
-
-        if (false) {
-            root = waterLayout(this)
+        val root: LayoutElementBuilders.LayoutElement = if (false) {
+            waterLayout(this)
         } else {
-            root = loginLayout(this)
+            loginLayout(this)
         }
 
         val singleTileTimeline = TimelineBuilders.Timeline.Builder().addTimelineEntry(
@@ -122,23 +120,22 @@ private fun loginColumnLayout(context: Context): Column {
         .setWidth(DimensionBuilders.expand())
         .addContent(
             Text.Builder(context, "Sign in")
-                .setTypography(Typography.TYPOGRAPHY_TITLE1)
+                .setTypography(Typography.TYPOGRAPHY_TITLE2)
                 .setColor(ColorProp.Builder(Color.WHITE).build())
                 .build()
         )
         .addContent(Spacer.Builder().setHeight(DpProp.Builder(10.0f).build()).build())
         .addContent(
-            Text.Builder(context, "Allow Waterlogged to access your Fitbit water data.")
-                .setTypography(Typography.TYPOGRAPHY_BODY1)
+            Text.Builder(context, "Allow Waterlogged to access your water data.")
+                .setTypography(Typography.TYPOGRAPHY_BODY2)
                 .setMaxLines(3)
                 .setColor(ColorProp.Builder(Color.WHITE).build())
                 .build()
         )
         .addContent(Spacer.Builder().setHeight(DpProp.Builder(10.0f).build()).build())
         .addContent(
-            Chip.Builder(context, emptyClickable, buildDeviceParameters(context.resources))
-                .setPrimaryLabelContent("Sign in")
-                .setWidth(DimensionBuilders.expand())
+            CompactChip.Builder(context, emptyClickable, buildDeviceParameters(context.resources))
+                .setTextContent("Authorise")
                 .build()
         ).build()
 }
