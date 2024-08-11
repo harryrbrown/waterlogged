@@ -37,7 +37,7 @@ class MainTileService : SuspendingTileService() {
         return ResourceBuilders.Resources.Builder()
             .setVersion(RESOURCES_VERSION)
             .addIdToImageMapping("glass", drawableResToImageResource(R.drawable.glass_cup_24px))
-            .addIdToImageMapping("bottle", drawableResToImageResource(R.drawable.tile_preview))
+            .addIdToImageMapping("bottle", drawableResToImageResource(R.drawable.water_bottle_24px))
             .addIdToImageMapping("large_bottle", drawableResToImageResource(R.drawable.water_bottle_large_24px))
             .addIdToImageMapping("keyboard", drawableResToImageResource(R.drawable.keyboard_24px))
             .build()
@@ -64,42 +64,48 @@ private fun buttonLayout(
 ) = Button.Builder(context, clickable)
     .setContentDescription(iconId)
     .setIconContent(iconId)
-//    .apply {
-//        setTextContent("HI")
-////        setButtonColors(ButtonColors.primaryButtonColors())
-//    }
     .build()
 
-private fun tileLayout(context: Context): LayoutElementBuilders.LayoutElement {
+private fun buttonsLayout(context: Context): MultiButtonLayout {
     val glassButton = buttonLayout(context, emptyClickable, "glass")
     val bottleButton = buttonLayout(context, emptyClickable, "bottle")
     val largeBottleButton = buttonLayout(context, emptyClickable, "large_bottle")
     val keyboardButton = buttonLayout(context, emptyClickable, "keyboard")
 
+    return MultiButtonLayout.Builder()
+        .addButtonContent(glassButton)
+        .addButtonContent(bottleButton)
+        .addButtonContent(largeBottleButton)
+        .addButtonContent(keyboardButton)
+        .build()
+}
+
+private fun circularProgressLayout(): CircularProgressIndicator {
+    return CircularProgressIndicator.Builder()
+        .setStartAngle(30.0f)
+        .setEndAngle(330.0f)
+        .setStrokeWidth(5.0f)
+        .setProgress(0.5f)
+        .build()
+}
+
+private fun tileLayout(context: Context): LayoutElementBuilders.LayoutElement {
     return EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
         .setResponsiveContentInsetEnabled(true)
-        .setContent(
-            MultiButtonLayout.Builder()
-                .addButtonContent(glassButton)
-                .addButtonContent(bottleButton)
-                .addButtonContent(largeBottleButton)
-                .addButtonContent(keyboardButton)
-                .build()
-        )
-        .setEdgeContent(
-            CircularProgressIndicator.Builder()
-                .setStartAngle(30.0f)
-                .setEndAngle(330.0f)
-                .setStrokeWidth(5.0f)
-                .setProgress(0.5f)
-                .build()
-        )
+        .setContent(buttonsLayout(context))
+        .setEdgeContent(circularProgressLayout())
         .setEdgeContentThickness(5.0f)
         .build()
 }
 
 @Preview(
     device = Devices.WEAR_OS_SMALL_ROUND,
+    showSystemUi = true,
+    backgroundColor = 0xff000000,
+    showBackground = true
+)
+@Preview(
+    device = Devices.WEAR_OS_LARGE_ROUND,
     showSystemUi = true,
     backgroundColor = 0xff000000,
     showBackground = true
