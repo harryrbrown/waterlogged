@@ -8,7 +8,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.protolayout.ColorBuilders.ColorProp
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.DimensionBuilders.DpProp
-import androidx.wear.protolayout.DimensionBuilders.SpacerDimension
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.LayoutElementBuilders.Spacer
@@ -16,15 +15,12 @@ import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.protolayout.material.Button
-import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.CircularProgressIndicator
 import androidx.wear.protolayout.material.CompactChip
 import androidx.wear.protolayout.material.Text
-import androidx.wear.protolayout.material.TitleChip
 import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
-import androidx.wear.protolayout.material.layouts.MultiSlotLayout
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders

@@ -1,3 +1,11 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val apikeyPropertiesFile = rootProject.file("apikeys.properties")
+val apikeyProperties = Properties().apply {
+    load(FileInputStream(apikeyPropertiesFile))
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -16,7 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
+        buildConfigField("String", "CLIENT_ID", "\"${apikeyProperties["CLIENT_ID"]}\"")
+        buildConfigField("String", "CLIENT_SECRET", "\"${apikeyProperties["CLIENT_SECRET"]}\"")
     }
 
     buildTypes {
@@ -37,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -65,6 +75,8 @@ dependencies {
     implementation(libs.watchface.complications.data.source.ktx)
     implementation(libs.wear.tooling.preview)
     implementation(libs.tiles.tooling.preview)
+    implementation(libs.horologist.compose.layout)
+    implementation(libs.wear.remote.interactions)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
