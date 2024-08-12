@@ -17,6 +17,7 @@ wearToolingPreview = "1.0.0"
 tilesToolingPreview = "1.4.0"
 horologistComposeLayout = "0.6.17"
 wearRemoteInteractions = "1.0.0"
+wearPhoneInteractions = "1.0.1"
 
 [libraries]
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
@@ -40,6 +41,7 @@ wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview",
 tiles-tooling-preview = { group = "androidx.wear.tiles", name = "tiles-tooling-preview", version.ref = "tilesToolingPreview" }
 horologist-compose-layout = { group = "com.google.android.horologist", name = "horologist-compose-layout", version.ref = "horologistComposeLayout" }
 wear-remote-interactions = { group = "androidx.wear", name = "wear-remote-interactions", version.ref = "wearRemoteInteractions" }
+wear-phone-interactions = { group = "androidx.wear", name = "wear-phone-interactions", version.ref = "wearPhoneInteractions" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -4,6 +4,7 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -53,7 +54,7 @@
             android:value="true" />
 
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.oauth.pkce.AuthPKCEActivity"
             android:exported="true"
             android:taskAffinity=""
             android:theme="@style/MainActivityTheme.Starting">

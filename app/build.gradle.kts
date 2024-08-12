@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.tiles.tooling.preview)
     implementation(libs.horologist.compose.layout)
     implementation(libs.wear.remote.interactions)
+    implementation(libs.wear.phone.interactions)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)

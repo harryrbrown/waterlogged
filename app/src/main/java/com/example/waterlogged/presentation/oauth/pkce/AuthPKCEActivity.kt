@@ -1,13 +1,12 @@
-package com.example.waterlogged.presentation.oauth
-
-// Based on the samples available at
-// https://github.com/android/wear-os-samples/tree/main/WearOAuth
+package com.example.waterlogged.presentation.oauth.pkce
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,26 +20,25 @@ import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.AppScaffold
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 
-class AuthDeviceGrantActivity : ComponentActivity() {
+class AuthPKCEActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { AuthenticateApp(deviceGrantViewModel = viewModel()) }
+        setContent { PKCEApp(pkceViewModel = viewModel()) }
     }
 }
 
 @Composable
-fun AuthenticateApp(deviceGrantViewModel: AuthDeviceGrantViewModel) {
+fun PKCEApp(pkceViewModel: AuthPKCEViewModel) {
     AppScaffold {
-        val uiState = deviceGrantViewModel.uiState.collectAsState()
+        val uiState = pkceViewModel.uiState.collectAsState()
         AuthenticateScreen(
             uiState.value.statusCode,
             uiState.value.resultMessage,
-            deviceGrantViewModel::startAuthFlow
+            pkceViewModel::startAuthFlow
         )
     }
 }
@@ -54,8 +52,8 @@ fun AuthenticateScreen(
 ) {
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
-            first = ItemType.Text,
-            last = ItemType.Text
+            first = ScalingLazyColumnDefaults.ItemType.Text,
+            last = ScalingLazyColumnDefaults.ItemType.Text
         )
     )
     ScreenScaffold(scrollState = columnState) {
@@ -63,7 +61,7 @@ fun AuthenticateScreen(
             item {
                 ListHeader {
                     Text(
-                        stringResource(R.string.oauth_device_auth_grant),
+                        stringResource(R.string.oauth_pkce),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -73,7 +71,8 @@ fun AuthenticateScreen(
                     onClick = { startAuthFlow() },
                     label = {
                         Text(
-                            text = stringResource(R.string.get_grant_from_phone)
+                            text = stringResource(R.string.authenticate),
+                            modifier = Modifier.align(Alignment.CenterVertically)
                         )
                     }
                 )
@@ -90,7 +89,7 @@ fun AuthenticateScreen(
 fun AuthenticateScreenPreview() {
     AuthenticateScreen(
         statusCode = R.string.status_retrieved,
-        resultMessage = "User name",
+        resultMessage = "Bobby Bonson",
         startAuthFlow = {}
     )
 }
