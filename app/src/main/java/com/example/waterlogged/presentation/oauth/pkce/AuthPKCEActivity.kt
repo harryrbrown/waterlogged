@@ -1,5 +1,7 @@
 package com.example.waterlogged.presentation.oauth.pkce
 
+// Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

@@ -1,5 +1,7 @@
 package com.example.waterlogged.presentation.oauth.pkce
 
+// Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
+
 import android.app.Application
 import android.content.Context
 import android.net.Uri
@@ -34,6 +36,11 @@ data class ProofKeyCodeExchangeState(
     val statusCode: Int = R.string.start_auth_flow,
     // Dynamic content to show on the Wear OS display
     val resultMessage: String = ""
+)
+
+data class Tokens(
+    val accessToken: String = "",
+    val refreshToken: String = ""
 )
 
 /**
@@ -89,14 +96,14 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
 
             // Step 2: Retrieve the access token
             showStatus(R.string.status_retrieving_token)
-            val token = retrieveToken(code, codeVerifier, oauthRequest).getOrElse {
+            val tokens = retrieveToken(code, codeVerifier).getOrElse {
                 showStatus(R.string.status_failure_token)
                 return@launch
             }
 
             // Step 3: Use token to perform API request
             showStatus(R.string.status_retrieving_user)
-            val userName = retrieveUserProfile(token).getOrElse {
+            val userName = retrieveUserProfile(tokens.accessToken).getOrElse {
                 showStatus(R.string.status_failure_user)
                 return@launch
             }
@@ -151,18 +158,12 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
 
     private suspend fun retrieveToken(
         code: String,
-        codeVerifier: CodeVerifier,
-        oauthRequest: OAuthRequest
-    ): Result<String> {
-        // In this sample, we're using a basic implementation of a POST request to retrieve the
-        // token. Normally you would probably move this code into a repository and use a library
-        // for making such a request.
+        codeVerifier: CodeVerifier
+    ): Result<Tokens> {
         return try {
             Log.d(TAG, "Requesting token...")
 
             val responseJson = doPostRequest(
-                // We request the token from the Google OAuth server. You can replace this with any OAuth
-                // server that supports the PKCE authentication flow.
                 url = "https://api.fitbit.com/oauth2/token",
                 params = mapOf(
                     "client_id" to CLIENT_ID,
@@ -173,7 +174,42 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                     "redirect_uri" to "https://wear.googleapis.com/3p_auth/com.example.waterlogged"
                 )
             )
-            Result.success(responseJson.getString("access_token"))
+
+            val result = Tokens(
+                responseJson.getString("access_token"),
+                responseJson.getString("refresh_token")
+            )
+
+            Result.success(result)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun refreshTokens(
+        refreshToken: String
+    ): Result<Tokens> {
+        return try {
+            Log.d(TAG, "Refreshing token...")
+
+            val responseJson = doPostRequest(
+                url = "https://api.fitbit.com/oauth2/token",
+                params = mapOf(
+                    "client_id" to CLIENT_ID,
+                    "grant_type" to "refresh_token",
+                    "refresh_token" to refreshToken
+                )
+            )
+
+            val result = Tokens(
+                responseJson.getString("access_token"),
+                responseJson.getString("refresh_token")
+            )
+
+            Result.success(result)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
