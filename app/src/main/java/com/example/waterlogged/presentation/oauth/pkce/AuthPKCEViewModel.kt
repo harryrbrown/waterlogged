@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 private const val TAG = "WearOAuthViewModel"
 
@@ -40,7 +41,8 @@ data class ProofKeyCodeExchangeState(
 
 data class Tokens(
     val accessToken: String = "",
-    val refreshToken: String = ""
+    val refreshToken: String = "",
+    var expiresAt: LocalDateTime
 )
 
 /**
@@ -177,7 +179,8 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
 
             val result = Tokens(
                 responseJson.getString("access_token"),
-                responseJson.getString("refresh_token")
+                responseJson.getString("refresh_token"),
+                LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
             )
 
             Result.success(result)
@@ -206,7 +209,8 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
 
             val result = Tokens(
                 responseJson.getString("access_token"),
-                responseJson.getString("refresh_token")
+                responseJson.getString("refresh_token"),
+                LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
             )
 
             Result.success(result)
