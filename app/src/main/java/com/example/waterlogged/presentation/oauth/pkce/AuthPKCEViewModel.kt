@@ -17,6 +17,7 @@ import com.example.waterlogged.BuildConfig
 import com.example.waterlogged.R
 import com.example.waterlogged.tools.doGetRequest
 import com.example.waterlogged.tools.doPostRequest
+import com.example.waterlogged.tools.putValue
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -183,36 +184,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                 LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
             )
 
-            Result.success(result)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.failure(e)
-        }
-    }
-
-    private suspend fun refreshTokens(
-        refreshToken: String
-    ): Result<Tokens> {
-        return try {
-            Log.d(TAG, "Refreshing token...")
-
-            val responseJson = doPostRequest(
-                url = "https://api.fitbit.com/oauth2/token",
-                params = mapOf(
-                    "client_id" to CLIENT_ID,
-                    "grant_type" to "refresh_token",
-                    "refresh_token" to refreshToken
-                )
-            )
-
-            val result = Tokens(
-                responseJson.getString("access_token"),
-                responseJson.getString("refresh_token"),
-                LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
-            )
-
+            writeTokensToKeystore(result)
             Result.success(result)
         } catch (e: CancellationException) {
             throw e
@@ -241,5 +213,11 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             e.printStackTrace()
             Result.failure(e)
         }
+    }
+
+    private fun writeTokensToKeystore(tokens: Tokens) {
+        putValue(context, "access_token", tokens.accessToken)
+        putValue(context, "refresh_token", tokens.refreshToken)
+        putValue(context, "expires_at", tokens.expiresAt.toString())
     }
 }

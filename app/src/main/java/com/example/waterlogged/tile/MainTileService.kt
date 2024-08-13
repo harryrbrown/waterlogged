@@ -2,9 +2,12 @@ package com.example.waterlogged.tile
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.wear.protolayout.ActionBuilders
+import androidx.wear.protolayout.ActionBuilders.AndroidActivity
 import androidx.wear.protolayout.ColorBuilders.ColorProp
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.DimensionBuilders.DpProp
@@ -12,6 +15,7 @@ import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.LayoutElementBuilders.Spacer
 import androidx.wear.protolayout.ModifiersBuilders
+import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.protolayout.material.Button
@@ -27,6 +31,9 @@ import androidx.wear.tiles.TileBuilders
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.example.waterlogged.R
 import com.example.waterlogged.tools.emptyClickable
+import com.example.waterlogged.tools.getValue
+import com.example.waterlogged.tools.isTokenExpired
+import com.example.waterlogged.tools.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
@@ -56,7 +63,14 @@ class MainTileService : SuspendingTileService() {
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
-        val root: LayoutElementBuilders.LayoutElement = if (false) {
+        val isAuthenticated = getValue(this, "access_token") != null
+        if (isTokenExpired(this)) {
+            refreshTokens(this)
+        }
+
+        Log.d("TAG", getValue(this, "access_token") ?: "test")
+
+        val root: LayoutElementBuilders.LayoutElement = if (isAuthenticated && !isTokenExpired(this)) {
             waterLayout(this)
         } else {
             loginLayout(this)
@@ -73,7 +87,7 @@ class MainTileService : SuspendingTileService() {
     }
 }
 
-private fun buttonLayout(context: Context, clickable: ModifiersBuilders.Clickable, iconId: String) =
+private fun buttonLayout(context: Context, clickable: Clickable, iconId: String) =
     Button.Builder(context, clickable)
         .setContentDescription(iconId)
         .setIconContent(iconId)
@@ -130,9 +144,20 @@ private fun loginColumnLayout(context: Context): Column {
         )
         .addContent(Spacer.Builder().setHeight(DpProp.Builder(10.0f).build()).build())
         .addContent(
-            CompactChip.Builder(context, emptyClickable, buildDeviceParameters(context.resources))
-                .setTextContent("Authorise")
-                .build()
+            CompactChip.Builder(
+                context,
+                Clickable.Builder()
+                    .setId("foo")
+                    .setOnClick(
+                        ActionBuilders.LaunchAction.Builder().setAndroidActivity(
+                            AndroidActivity.Builder()
+                                .setPackageName("com.example.waterlogged")
+                                .setClassName("com.example.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
+                                .build()
+                        ).build()) .build(),
+                buildDeviceParameters(context.resources))
+                    .setTextContent("Authorise")
+                    .build()
         ).build()
 }
 
