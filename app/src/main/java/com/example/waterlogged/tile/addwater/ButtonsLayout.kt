@@ -1,6 +1,9 @@
 package com.example.waterlogged.tile.addwater
 
 import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
@@ -9,7 +12,12 @@ import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.CircularProgressIndicator
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
+import androidx.wear.tooling.preview.devices.WearDevices
+import com.example.waterlogged.tile.previewResources
+import com.example.waterlogged.tools.getWater
+import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
+import kotlinx.coroutines.*
 
 private fun buttonLayout(context: Context, iconId: String) =
     Button.Builder(context, Clickable.Builder()
@@ -48,11 +56,20 @@ private fun circularProgressLayout(): CircularProgressIndicator {
         .build()
 }
 
-fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement {
-    return EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
+fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement = runBlocking {
+    launch {
+        getWater(context)
+    }
+    return@runBlocking EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
         .setResponsiveContentInsetEnabled(true)
         .setContent(buttonsLayout(context))
         .setEdgeContent(circularProgressLayout())
         .setEdgeContentThickness(5.0f)
         .build()
 }
+
+@Preview(device = WearDevices.SMALL_ROUND)
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun AddWaterTilePreview() =
+    LayoutRootPreview(root = waterLayout(LocalContext.current), tileResourcesFn = previewResources)

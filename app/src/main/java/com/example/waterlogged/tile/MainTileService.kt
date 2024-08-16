@@ -1,28 +1,12 @@
 package com.example.waterlogged.tile
 
-import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.wear.protolayout.ActionBuilders
-import androidx.wear.protolayout.ColorBuilders.ColorProp
-import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.LayoutElementBuilders
-import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.ResourceBuilders
-import androidx.wear.protolayout.StateBuilders
 import androidx.wear.protolayout.TimelineBuilders
-import androidx.wear.protolayout.material.Button
-import androidx.wear.protolayout.material.Chip
-import androidx.wear.protolayout.material.CircularProgressIndicator
-import androidx.wear.protolayout.material.CompactChip
-import androidx.wear.protolayout.material.Text
-import androidx.wear.protolayout.material.Typography
-import androidx.wear.protolayout.material.layouts.EdgeContentLayout
-import androidx.wear.protolayout.material.layouts.MultiButtonLayout
-import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import androidx.wear.tooling.preview.devices.WearDevices
@@ -30,21 +14,16 @@ import com.example.waterlogged.R
 import com.example.waterlogged.tile.addwater.addWaterLayout
 import com.example.waterlogged.tile.addwater.waterLayout
 import com.example.waterlogged.tile.login.loginLayout
-import com.example.waterlogged.tools.emptyClickable
 import com.example.waterlogged.tools.getValue
 import com.example.waterlogged.tools.isTokenExpired
 import com.example.waterlogged.tools.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.tools.LayoutRootPreview
-import com.google.android.horologist.compose.tools.buildDeviceParameters
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.drawableResToImageResource
 
 private const val RESOURCES_VERSION = "0"
 
-/**
- * Skeleton for a tile with no images.
- */
 @OptIn(ExperimentalHorologistApi::class)
 class MainTileService : SuspendingTileService() {
 
@@ -67,8 +46,6 @@ class MainTileService : SuspendingTileService() {
         if (isTokenExpired(this)) {
             refreshTokens(this)
         }
-
-        Log.d("TAG", getValue(this, "access_token") ?: "test")
 
         val root: LayoutElementBuilders.LayoutElement = if (isAuthenticated && !isTokenExpired(this)) {
             waterLayout(this)
@@ -102,7 +79,6 @@ val previewResources: ResourceBuilders.Resources.Builder.() -> Unit = {
 @Composable
 fun TilePreview() =
     LayoutRootPreview(root = waterLayout(LocalContext.current), tileResourcesFn = previewResources)
-
 
 @Preview(device = WearDevices.SMALL_ROUND)
 @Preview(device = WearDevices.LARGE_ROUND)
