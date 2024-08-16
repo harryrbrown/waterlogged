@@ -9,16 +9,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ActionBuilders.AndroidActivity
 import androidx.wear.protolayout.ColorBuilders.ColorProp
-import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.DimensionBuilders.DpProp
+import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.LayoutElementBuilders.Spacer
-import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.ResourceBuilders
+import androidx.wear.protolayout.StateBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.protolayout.material.Button
+import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.CircularProgressIndicator
 import androidx.wear.protolayout.material.CompactChip
 import androidx.wear.protolayout.material.Text
@@ -76,28 +77,39 @@ class MainTileService : SuspendingTileService() {
             loginLayout(this)
         }
 
-        val singleTileTimeline = TimelineBuilders.Timeline.Builder().addTimelineEntry(
-            TimelineBuilders.TimelineEntry.Builder().setLayout(
-                LayoutElementBuilders.Layout.Builder().setRoot(root).build()
-            ).build()
-        ).build()
+        val timeline = TimelineBuilders.Timeline.fromLayoutElement(
+            when (requestParams.currentState.lastClickableId) {
+                "glass" -> addWaterLayout(this, "glass", "250")
+                "bottle" -> addWaterLayout(this, "bottle", "500")
+                "large_bottle" -> addWaterLayout(this, "large_bottle", "750")
+                else -> root
+            }
+        )
 
         return TileBuilders.Tile.Builder().setResourcesVersion(RESOURCES_VERSION)
-            .setTileTimeline(singleTileTimeline).build()
+            .setTileTimeline(timeline).build()
     }
 }
 
-private fun buttonLayout(context: Context, clickable: Clickable, iconId: String) =
-    Button.Builder(context, clickable)
+private fun buttonLayout(context: Context, iconId: String) =
+    Button.Builder(context, Clickable.Builder()
+        .setId(iconId)
+        .setOnClick(
+            ActionBuilders.LoadAction.Builder()
+                .setRequestState(
+                    StateBuilders.State.Builder()
+                        .build()
+                ).build())
+            .build())
         .setContentDescription(iconId)
         .setIconContent(iconId)
         .build()
 
 private fun buttonsLayout(context: Context): MultiButtonLayout {
-    val glassButton = buttonLayout(context, emptyClickable, "glass")
-    val bottleButton = buttonLayout(context, emptyClickable, "bottle")
-    val largeBottleButton = buttonLayout(context, emptyClickable, "large_bottle")
-    val keyboardButton = buttonLayout(context, emptyClickable, "keyboard")
+    val glassButton = buttonLayout(context, "glass")
+    val bottleButton = buttonLayout(context, "bottle")
+    val largeBottleButton = buttonLayout(context, "large_bottle")
+    val keyboardButton = buttonLayout(context, "keyboard")
 
     return MultiButtonLayout.Builder()
         .addButtonContent(glassButton)
@@ -127,7 +139,7 @@ private fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement {
 
 private fun loginColumnLayout(context: Context): Column {
     return Column.Builder()
-        .setWidth(DimensionBuilders.expand())
+        .setWidth(expand())
         .addContent(
             Text.Builder(context, "Sign in")
                 .setTypography(Typography.TYPOGRAPHY_TITLE2)
@@ -168,6 +180,47 @@ private fun loginLayout(context: Context): LayoutElementBuilders.LayoutElement {
         .build()
 }
 
+private fun addWaterLayout(context: Context, container: String, amount: String): LayoutElementBuilders.LayoutElement {
+    val iconName = if (container == "glass") {
+        "glass"
+    } else if (container == "bottle") {
+        "bottle"
+    } else {
+        "large_bottle"
+    }
+
+    return PrimaryLayout.Builder(buildDeviceParameters(context.resources))
+        .setResponsiveContentInsetEnabled(true)
+        .setPrimaryLabelTextContent(
+            Text.Builder(context, "Add water")
+                .setTypography(Typography.TYPOGRAPHY_TITLE2)
+                .setColor(ColorProp.Builder(Color.WHITE).build())
+                .build())
+        .setContent(
+            Chip.Builder(context, emptyClickable, buildDeviceParameters(context.resources))
+                .setPrimaryLabelContent("Add $container")
+                .setSecondaryLabelContent("${amount}ml")
+                .setIconContent(iconName)
+                .setWidth(expand())
+                .build())
+        .setPrimaryChipContent(
+            CompactChip.Builder(
+                context,
+                "Back",
+                Clickable.Builder()
+                    .setId("back")
+                    .setOnClick(
+                        ActionBuilders.LoadAction.Builder()
+                            .setRequestState(
+                                StateBuilders.State.Builder()
+                                    .build()
+                            ).build())
+                    .build(),
+                buildDeviceParameters(context.resources)).build()
+        )
+        .build()
+}
+
 val previewResources: ResourceBuilders.Resources.Builder.() -> Unit = {
     addIdToImageMapping("glass", drawableResToImageResource(R.drawable.glass_cup_24px))
     addIdToImageMapping("bottle", drawableResToImageResource(R.drawable.water_bottle_24px))
@@ -187,3 +240,9 @@ fun TilePreview() =
 @Composable
 fun LoginTilePreview() =
     LayoutRootPreview(root = loginLayout(LocalContext.current), tileResourcesFn = previewResources)
+
+@Preview(device = WearDevices.SMALL_ROUND)
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun AddWaterTilePreview() =
+    LayoutRootPreview(root = addWaterLayout(LocalContext.current, "glass", "250"), tileResourcesFn = previewResources)
