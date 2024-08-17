@@ -22,7 +22,12 @@
     <string name="status_retrieving_user">Retrieving user profile…</string>
     <string name="status_failure_user">Could not retrieve user profile</string>
     <string name="authenticate">Authenticate</string>
+    <string name="sign_in">Sign in</string>
     <string name="sign_in_on_phone">Sign in on phone</string>
-    <string name="waterlogged">Waterlogged</string>
     <string name="sign_in_fitbit">Sign in to Fitbit to allow Waterlogged to access your water data.</string>
+    <string name="waterlogged">Waterlogged</string>
+    <string name="waterlogged_allow_access">Allow Waterlogged to access your water data.</string>
+    <string name="add_water">Add water</string>
+    <string name="add">Add</string>
+    <string name="back">Back</string>
 </resources>

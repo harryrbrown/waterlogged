@@ -71,5 +71,5 @@ fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement = runBloc
 @Preview(device = WearDevices.SMALL_ROUND)
 @Preview(device = WearDevices.LARGE_ROUND)
 @Composable
-fun AddWaterTilePreview() =
+fun WaterTilePreview() =
     LayoutRootPreview(root = waterLayout(LocalContext.current), tileResourcesFn = previewResources)

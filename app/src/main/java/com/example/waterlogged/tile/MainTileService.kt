@@ -1,15 +1,10 @@
 package com.example.waterlogged.tile
 
-import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
-import androidx.wear.tooling.preview.devices.WearDevices
 import com.example.waterlogged.R
 import com.example.waterlogged.tile.addwater.addWaterLayout
 import com.example.waterlogged.tile.addwater.waterLayout
@@ -18,7 +13,6 @@ import com.example.waterlogged.tools.getValue
 import com.example.waterlogged.tools.isTokenExpired
 import com.example.waterlogged.tools.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
-import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.drawableResToImageResource
 
@@ -73,21 +67,3 @@ val previewResources: ResourceBuilders.Resources.Builder.() -> Unit = {
     addIdToImageMapping("large_bottle", drawableResToImageResource(R.drawable.water_bottle_large_24px))
     addIdToImageMapping("keyboard", drawableResToImageResource(R.drawable.keyboard_24px))
 }
-
-@Preview(device = WearDevices.SMALL_ROUND)
-@Preview(device = WearDevices.LARGE_ROUND)
-@Composable
-fun TilePreview() =
-    LayoutRootPreview(root = waterLayout(LocalContext.current), tileResourcesFn = previewResources)
-
-@Preview(device = WearDevices.SMALL_ROUND)
-@Preview(device = WearDevices.LARGE_ROUND)
-@Composable
-fun LoginTilePreview() =
-    LayoutRootPreview(root = loginLayout(LocalContext.current), tileResourcesFn = previewResources)
-
-@Preview(device = WearDevices.SMALL_ROUND)
-@Preview(device = WearDevices.LARGE_ROUND)
-@Composable
-fun AddWaterTilePreview() =
-    LayoutRootPreview(root = addWaterLayout(LocalContext.current, "glass", "250"), tileResourcesFn = previewResources)
