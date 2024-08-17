@@ -15,14 +15,22 @@ suspend fun getWater(context: Context) {
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val token = getValue(context, "access_token")
 
-        val responseJson = doGetRequest(
+        val waterLogJson = doGetRequest(
             url = "https://api.fitbit.com/1/user/-/foods/log/water/date/$date.json",
             requestHeaders = mapOf(
                 "Authorization" to "Bearer $token"
             )
         )
 
-        Log.d(TAG, responseJson.toString())
+        val waterGoalJson = doGetRequest(
+            url = "https://api.fitbit.com/1/user/-/foods/log/water/goal.json",
+            requestHeaders = mapOf(
+                "Authorization" to "Bearer $token"
+            )
+        )
+
+        Log.d(TAG, waterLogJson.toString())
+        Log.d(TAG, waterGoalJson.toString())
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {

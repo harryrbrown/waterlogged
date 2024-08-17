@@ -2,10 +2,14 @@ package com.example.waterlogged.tile
 
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ResourceBuilders
+import androidx.wear.protolayout.StateBuilders
 import androidx.wear.protolayout.TimelineBuilders
+import androidx.wear.protolayout.expression.DynamicDataBuilders
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import com.example.waterlogged.R
+import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_GOAL
+import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_INTAKE
 import com.example.waterlogged.tile.addwater.addWaterLayout
 import com.example.waterlogged.tile.addwater.waterLayout
 import com.example.waterlogged.tile.login.loginLayout
@@ -20,7 +24,6 @@ private const val RESOURCES_VERSION = "0"
 
 @OptIn(ExperimentalHorologistApi::class)
 class MainTileService : SuspendingTileService() {
-
     override suspend fun resourcesRequest(
         requestParams: RequestBuilders.ResourcesRequest
     ): ResourceBuilders.Resources {
@@ -56,7 +59,13 @@ class MainTileService : SuspendingTileService() {
             }
         )
 
+        val state = StateBuilders.State.Builder()
+            .addKeyToValueMapping(KEY_WATER_INTAKE, DynamicDataBuilders.DynamicDataValue.fromFloat(0.0f))
+            .addKeyToValueMapping(KEY_WATER_GOAL, DynamicDataBuilders.DynamicDataValue.fromFloat(1.0f))
+            .build()
+
         return TileBuilders.Tile.Builder().setResourcesVersion(RESOURCES_VERSION)
+            .setState(state)
             .setTileTimeline(timeline).build()
     }
 }

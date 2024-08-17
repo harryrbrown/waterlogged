@@ -8,11 +8,15 @@ import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.StateBuilders
+import androidx.wear.protolayout.TypeBuilders.FloatProp
+import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
 import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.CircularProgressIndicator
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
+import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_INTAKE
+import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_INTAKE_RATIO
 import com.example.waterlogged.tile.previewResources
 import com.example.waterlogged.tools.getWater
 import com.google.android.horologist.compose.tools.LayoutRootPreview
@@ -52,7 +56,9 @@ private fun circularProgressLayout(): CircularProgressIndicator {
         .setStartAngle(30.0f)
         .setEndAngle(330.0f)
         .setStrokeWidth(5.0f)
-        .setProgress(0.5f)
+        .setProgress(FloatProp.Builder()
+            .setDynamicValue(DynamicFloat.from(KEY_WATER_INTAKE_RATIO).animate())
+            .build())
         .build()
 }
 
