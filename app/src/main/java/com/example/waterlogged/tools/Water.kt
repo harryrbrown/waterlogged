@@ -8,8 +8,14 @@ import kotlinx.coroutines.CancellationException
 
 private const val TAG = "Water"
 
-suspend fun getWater(context: Context) {
-    try {
+data class WaterLog(
+    val water: Double = 0.0,
+    val waterGoal: Double = 0.0,
+    val waterGoalProgress: Double = 0.0
+)
+
+suspend fun getWater(context: Context): Result<WaterLog> {
+    return try {
         Log.d(TAG, "Fetching water...")
 
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -31,10 +37,19 @@ suspend fun getWater(context: Context) {
 
         Log.d(TAG, waterLogJson.toString())
         Log.d(TAG, waterGoalJson.toString())
+
+        val water = waterLogJson.getJSONObject("summary").getDouble("water")
+        val goal = waterGoalJson.getJSONObject("goal").getDouble("goal")
+        val progress = water / goal
+
+        val result = WaterLog(water, goal, progress)
+
+        Result.success(result)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
         e.printStackTrace()
+        Result.failure(e)
     }
 }
 

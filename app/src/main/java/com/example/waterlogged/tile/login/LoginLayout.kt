@@ -49,8 +49,8 @@ private fun loginColumnLayout(context: Context): Column {
                         .setClassName("com.example.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
                         .build()
                     ).build())
-                .build(),
-            buildDeviceParameters(context.resources))
+            .build(),
+        buildDeviceParameters(context.resources))
         .setTextContent(context.getString(R.string.authenticate))
         .build()
 

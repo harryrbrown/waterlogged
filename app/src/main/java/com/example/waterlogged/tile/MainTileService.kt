@@ -4,17 +4,18 @@ import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.StateBuilders
 import androidx.wear.protolayout.TimelineBuilders
+import androidx.wear.protolayout.expression.AppDataKey
+import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
 import androidx.wear.protolayout.expression.DynamicDataBuilders
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import com.example.waterlogged.R
-import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_GOAL
-import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_INTAKE
 import com.example.waterlogged.tile.addwater.addWaterLayout
 import com.example.waterlogged.tile.addwater.waterLayout
 import com.example.waterlogged.tile.login.loginLayout
 import com.example.waterlogged.tools.getValue
 import com.example.waterlogged.tools.isTokenExpired
+import com.example.waterlogged.tools.postWater
 import com.example.waterlogged.tools.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
@@ -24,6 +25,12 @@ private const val RESOURCES_VERSION = "0"
 
 @OptIn(ExperimentalHorologistApi::class)
 class MainTileService : SuspendingTileService() {
+    companion object {
+        val KEY_WATER_INTAKE = AppDataKey<DynamicFloat>("water_intake")
+        val KEY_WATER_GOAL = AppDataKey<DynamicFloat>("water_goal")
+        val KEY_WATER_INTAKE_RATIO = AppDataKey<DynamicFloat>("water_intake_ratio")
+    }
+
     override suspend fun resourcesRequest(
         requestParams: RequestBuilders.ResourcesRequest
     ): ResourceBuilders.Resources {
@@ -44,25 +51,30 @@ class MainTileService : SuspendingTileService() {
             refreshTokens(this)
         }
 
-        val root: LayoutElementBuilders.LayoutElement = if (isAuthenticated && !isTokenExpired(this)) {
-            waterLayout(this)
-        } else {
-            loginLayout(this)
+        if (requestParams.currentState.lastClickableId == "add_250ml") {
+            postWater(this, "250")
         }
+
+        val state = StateBuilders.State.Builder()
+            .addKeyToValueMapping(KEY_WATER_INTAKE, DynamicDataBuilders.DynamicDataValue.fromFloat(0.0f))
+            .addKeyToValueMapping(KEY_WATER_GOAL, DynamicDataBuilders.DynamicDataValue.fromFloat(1.0f))
+            .addKeyToValueMapping(KEY_WATER_INTAKE_RATIO, DynamicDataBuilders.DynamicDataValue.fromFloat(0.0f))
+            .build()
 
         val timeline = TimelineBuilders.Timeline.fromLayoutElement(
             when (requestParams.currentState.lastClickableId) {
                 "glass" -> addWaterLayout(this, "glass", "250")
                 "bottle" -> addWaterLayout(this, "bottle", "500")
                 "large_bottle" -> addWaterLayout(this, "large_bottle", "750")
-                else -> root
+                else -> {
+                    if (isAuthenticated && !isTokenExpired(this)) {
+                        waterLayout(this)
+                    } else {
+                        loginLayout(this)
+                    }
+                }
             }
         )
-
-        val state = StateBuilders.State.Builder()
-            .addKeyToValueMapping(KEY_WATER_INTAKE, DynamicDataBuilders.DynamicDataValue.fromFloat(0.0f))
-            .addKeyToValueMapping(KEY_WATER_GOAL, DynamicDataBuilders.DynamicDataValue.fromFloat(1.0f))
-            .build()
 
         return TileBuilders.Tile.Builder().setResourcesVersion(RESOURCES_VERSION)
             .setState(state)

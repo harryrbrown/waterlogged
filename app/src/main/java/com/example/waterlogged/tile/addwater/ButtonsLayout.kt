@@ -15,9 +15,9 @@ import androidx.wear.protolayout.material.CircularProgressIndicator
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_INTAKE
-import com.example.waterlogged.tile.WaterloggedTile.Companion.KEY_WATER_INTAKE_RATIO
+import com.example.waterlogged.tile.MainTileService.Companion.KEY_WATER_INTAKE_RATIO
 import com.example.waterlogged.tile.previewResources
+import com.example.waterlogged.tools.WaterLog
 import com.example.waterlogged.tools.getWater
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
@@ -51,25 +51,27 @@ private fun buttonsLayout(context: Context): MultiButtonLayout {
         .build()
 }
 
-private fun circularProgressLayout(): CircularProgressIndicator {
+private fun circularProgressLayout(progress: Double): CircularProgressIndicator {
     return CircularProgressIndicator.Builder()
         .setStartAngle(30.0f)
         .setEndAngle(330.0f)
         .setStrokeWidth(5.0f)
         .setProgress(FloatProp.Builder()
-            .setDynamicValue(DynamicFloat.from(KEY_WATER_INTAKE_RATIO).animate())
+            .setValue(progress.toFloat())
+//            .setDynamicValue(DynamicFloat.from(KEY_WATER_INTAKE_RATIO).animate())
             .build())
         .build()
 }
 
-fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement = runBlocking {
-    launch {
-        getWater(context)
-    }
-    return@runBlocking EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
+fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement {
+    val water = runBlocking {
+        return@runBlocking getWater(context)
+    }.getOrDefault(WaterLog())
+
+    return EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
         .setResponsiveContentInsetEnabled(true)
         .setContent(buttonsLayout(context))
-        .setEdgeContent(circularProgressLayout())
+        .setEdgeContent(circularProgressLayout(water.waterGoalProgress))
         .setEdgeContentThickness(5.0f)
         .build()
 }
