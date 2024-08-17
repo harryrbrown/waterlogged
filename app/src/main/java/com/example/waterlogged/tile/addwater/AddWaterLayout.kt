@@ -30,36 +30,38 @@ fun addWaterLayout(context: Context, container: String, amount: String): LayoutE
         else -> "large bottle"
     }
 
+    val primaryLabelText = Text.Builder(context, context.getString(R.string.add_water))
+        .setTypography(Typography.TYPOGRAPHY_TITLE2)
+        .setColor(ColorProp.Builder(Color.WHITE).build())
+        .build()
+
+    val contentChip = Chip.Builder(context, emptyClickable, buildDeviceParameters(context.resources))
+        .setPrimaryLabelContent("${context.getString(R.string.add)} $containerName")
+        .setSecondaryLabelContent("${amount}ml")
+        .setIconContent(container)
+        .setWidth(expand())
+        .build()
+
+    val primaryChip = CompactChip.Builder(
+        context,
+        context.getString(R.string.back),
+        Clickable.Builder()
+            .setId("back")
+            .setOnClick(
+                ActionBuilders.LoadAction.Builder()
+                    .setRequestState(
+                        StateBuilders.State.Builder()
+                            .build()
+                    ).build())
+            .build(),
+        buildDeviceParameters(context.resources)
+    ).build()
+
     return PrimaryLayout.Builder(buildDeviceParameters(context.resources))
         .setResponsiveContentInsetEnabled(true)
-        .setPrimaryLabelTextContent(
-            Text.Builder(context, context.getString(R.string.add_water))
-                .setTypography(Typography.TYPOGRAPHY_TITLE2)
-                .setColor(ColorProp.Builder(Color.WHITE).build())
-                .build())
-        .setContent(
-            Chip.Builder(context, emptyClickable, buildDeviceParameters(context.resources))
-                .setPrimaryLabelContent("${context.getString(R.string.add)} $containerName")
-                .setSecondaryLabelContent("${amount}ml")
-                .setIconContent(container)
-                .setWidth(expand())
-                .build())
-        .setPrimaryChipContent(
-            CompactChip.Builder(
-                context,
-                context.getString(R.string.back),
-                Clickable.Builder()
-                    .setId("back")
-                    .setOnClick(
-                        ActionBuilders.LoadAction.Builder()
-                            .setRequestState(
-                                StateBuilders.State.Builder()
-                                    .build()
-                            ).build())
-                    .build(),
-                buildDeviceParameters(context.resources)
-            ).build()
-        )
+        .setPrimaryLabelTextContent(primaryLabelText)
+        .setContent(contentChip)
+        .setPrimaryChipContent(primaryChip)
         .build()
 }
 

@@ -25,40 +25,43 @@ import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 
 private fun loginColumnLayout(context: Context): Column {
+    val spacer = Spacer.Builder().setHeight(DpProp.Builder(10.0f).build()).build()
+
+    val titleText = Text.Builder(context, context.getString(R.string.sign_in))
+        .setTypography(Typography.TYPOGRAPHY_TITLE2)
+        .setColor(ColorProp.Builder(Color.WHITE).build())
+        .build()
+
+    val bodyText = Text.Builder(context, context.getString(R.string.waterlogged_allow_access))
+        .setTypography(Typography.TYPOGRAPHY_BODY2)
+        .setMaxLines(3)
+        .setColor(ColorProp.Builder(Color.WHITE).build())
+        .build()
+
+    val authenticateChip = CompactChip.Builder(
+        context,
+        Clickable.Builder()
+            .setId("authenticate")
+            .setOnClick(
+                ActionBuilders.LaunchAction.Builder().setAndroidActivity(
+                    AndroidActivity.Builder()
+                        .setPackageName("com.example.waterlogged")
+                        .setClassName("com.example.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
+                        .build()
+                    ).build())
+                .build(),
+            buildDeviceParameters(context.resources))
+        .setTextContent(context.getString(R.string.authenticate))
+        .build()
+
     return Column.Builder()
         .setWidth(expand())
-        .addContent(
-            Text.Builder(context, context.getString(R.string.sign_in))
-                .setTypography(Typography.TYPOGRAPHY_TITLE2)
-                .setColor(ColorProp.Builder(Color.WHITE).build())
-                .build()
-        )
-        .addContent(Spacer.Builder().setHeight(DpProp.Builder(10.0f).build()).build())
-        .addContent(
-            Text.Builder(context, context.getString(R.string.waterlogged_allow_access))
-                .setTypography(Typography.TYPOGRAPHY_BODY2)
-                .setMaxLines(3)
-                .setColor(ColorProp.Builder(Color.WHITE).build())
-                .build()
-        )
-        .addContent(Spacer.Builder().setHeight(DpProp.Builder(10.0f).build()).build())
-        .addContent(
-            CompactChip.Builder(
-                context,
-                Clickable.Builder()
-                    .setId("foo")
-                    .setOnClick(
-                        ActionBuilders.LaunchAction.Builder().setAndroidActivity(
-                            AndroidActivity.Builder()
-                                .setPackageName("com.example.waterlogged")
-                                .setClassName("com.example.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
-                                .build()
-                        ).build()) .build(),
-                buildDeviceParameters(context.resources)
-            )
-                .setTextContent(context.getString(R.string.authenticate))
-                .build()
-        ).build()
+        .addContent(titleText)
+        .addContent(spacer)
+        .addContent(bodyText)
+        .addContent(spacer)
+        .addContent(authenticateChip)
+        .build()
 }
 
 fun loginLayout(context: Context): LayoutElementBuilders.LayoutElement {
