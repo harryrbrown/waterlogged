@@ -29,3 +29,29 @@ suspend fun getWater(context: Context) {
         e.printStackTrace()
     }
 }
+
+suspend fun postWater(context: Context, amount: String) {
+    try {
+        Log.d(TAG, "Saving ${amount}ml of water...")
+
+        val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val token = getValue(context, "access_token")
+
+        val responseJson = doPostRequest(
+            url = "https://api.fitbit.com/1/user/-/foods/log/water.json",
+            params = mapOf(
+                "amount" to amount,
+                "date" to date
+            ),
+            requestHeaders = mapOf(
+                "Authorization" to "Bearer $token"
+            )
+        )
+
+        Log.d(TAG, responseJson.toString())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}

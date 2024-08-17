@@ -19,6 +19,7 @@ import org.json.JSONObject
 suspend fun doPostRequest(
     url: String,
     params: Map<String, String>,
+    requestHeaders: Map<String, String>? = null,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): JSONObject {
     return withContext(dispatcher) {
@@ -31,6 +32,10 @@ suspend fun doPostRequest(
             postData.append(URLEncoder.encode(value, "UTF-8"))
         }
         val postDataBytes = postData.toString().toByteArray(charset("UTF-8"))
+
+        requestHeaders?.onEach { (key, value) ->
+            conn.setRequestProperty(key, value)
+        }
 
         conn.apply {
             requestMethod = "POST"
