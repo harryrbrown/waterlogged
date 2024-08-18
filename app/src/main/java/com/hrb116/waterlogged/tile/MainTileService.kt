@@ -1,12 +1,7 @@
 package com.hrb116.waterlogged.tile
 
-import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ResourceBuilders
-import androidx.wear.protolayout.StateBuilders
 import androidx.wear.protolayout.TimelineBuilders
-import androidx.wear.protolayout.expression.AppDataKey
-import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
-import androidx.wear.protolayout.expression.DynamicDataBuilders
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import com.hrb116.waterlogged.R
