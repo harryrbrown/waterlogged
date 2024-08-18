@@ -1,14 +1,22 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val apikeyPropertiesFile = rootProject.file("apikeys.properties")
+val apikeyProperties = Properties().apply {
+    load(FileInputStream(apikeyPropertiesFile))
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "com.example.waterlogged"
+    namespace = "com.hrb116.waterlogged"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.waterlogged"
+        applicationId = "com.hrb116.waterlogged"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -16,7 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
+        buildConfigField("String", "CLIENT_ID", "\"${apikeyProperties["CLIENT_ID"]}\"")
+        buildConfigField("String", "CLIENT_SECRET", "\"${apikeyProperties["CLIENT_SECRET"]}\"")
     }
 
     buildTypes {
@@ -37,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -65,6 +75,9 @@ dependencies {
     implementation(libs.watchface.complications.data.source.ktx)
     implementation(libs.wear.tooling.preview)
     implementation(libs.tiles.tooling.preview)
+    implementation(libs.horologist.compose.layout)
+    implementation(libs.wear.remote.interactions)
+    implementation(libs.wear.phone.interactions)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)

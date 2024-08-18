@@ -5,6 +5,30 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">From the Square world,\nHello, %1$s!</string>
-    <string name="tile_label">Example tile</string>
+    <string name="tile_label">Quick add water</string>
+    <string name="tile_description">Quickly record water to Fitbit</string>
     <string name="complication_label">Example complication</string>
+    <string name="start_auth_flow">Authenticate</string>
+    <string name="oauth_device_authorization_grant">OAuth Device Authorization Grant</string>
+    <string name="oauth_device_authorization_default">Not authorized</string>
+    <string name="status_switch_to_phone">Starting authorization… Switch to your phone to authenticate.</string>
+    <string name="status_failed">Authorization failed</string>
+    <string name="status_code">"Code: "</string>
+    <string name="status_retrieved">User profile retrieved. Name:</string>
+    <string name="get_grant_from_phone">Get Grant from Phone</string>
+    <string name="oauth_device_auth_grant">OAuth Device Auth Grant</string>
+    <string name="oauth_pkce">OAuth PKCE</string>
+    <string name="status_retrieving_token">Retrieving token…</string>
+    <string name="status_failure_token">Could not retrieve token</string>
+    <string name="status_retrieving_user">Retrieving user profile…</string>
+    <string name="status_failure_user">Could not retrieve user profile</string>
+    <string name="authenticate">Authenticate</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_in_on_phone">Sign in on phone</string>
+    <string name="sign_in_fitbit">Sign in to Fitbit to allow Waterlogged to access your water data.</string>
+    <string name="waterlogged">Waterlogged</string>
+    <string name="waterlogged_allow_access">Allow Waterlogged to access your water data.</string>
+    <string name="add_water">Add water</string>
+    <string name="add">Add</string>
+    <string name="back">Back</string>
 </resources>
