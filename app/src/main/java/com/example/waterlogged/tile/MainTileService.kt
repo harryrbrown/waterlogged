@@ -25,12 +25,6 @@ private const val RESOURCES_VERSION = "0"
 
 @OptIn(ExperimentalHorologistApi::class)
 class MainTileService : SuspendingTileService() {
-    companion object {
-        val KEY_WATER_INTAKE = AppDataKey<DynamicFloat>("water_intake")
-        val KEY_WATER_GOAL = AppDataKey<DynamicFloat>("water_goal")
-        val KEY_WATER_INTAKE_RATIO = AppDataKey<DynamicFloat>("water_intake_ratio")
-    }
-
     override suspend fun resourcesRequest(
         requestParams: RequestBuilders.ResourcesRequest
     ): ResourceBuilders.Resources {
@@ -57,12 +51,6 @@ class MainTileService : SuspendingTileService() {
             "add_750ml" -> postWater(this, "750")
         }
 
-        val state = StateBuilders.State.Builder()
-            .addKeyToValueMapping(KEY_WATER_INTAKE, DynamicDataBuilders.DynamicDataValue.fromFloat(0.0f))
-            .addKeyToValueMapping(KEY_WATER_GOAL, DynamicDataBuilders.DynamicDataValue.fromFloat(1.0f))
-            .addKeyToValueMapping(KEY_WATER_INTAKE_RATIO, DynamicDataBuilders.DynamicDataValue.fromFloat(0.0f))
-            .build()
-
         val timeline = TimelineBuilders.Timeline.fromLayoutElement(
             when (requestParams.currentState.lastClickableId) {
                 "glass" -> addWaterLayout(this, "glass", "250")
@@ -70,7 +58,7 @@ class MainTileService : SuspendingTileService() {
                 "large_bottle" -> addWaterLayout(this, "large_bottle", "750")
                 else -> {
                     if (isAuthenticated && !isTokenExpired(this)) {
-                        waterLayout(this)
+                        waterLayout(this, requestParams.currentState.lastClickableId == "back")
                     } else {
                         loginLayout(this)
                     }
@@ -79,7 +67,6 @@ class MainTileService : SuspendingTileService() {
         )
 
         return TileBuilders.Tile.Builder().setResourcesVersion(RESOURCES_VERSION)
-            .setState(state)
             .setTileTimeline(timeline)
             .build()
     }

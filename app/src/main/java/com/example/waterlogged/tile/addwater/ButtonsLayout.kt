@@ -12,6 +12,8 @@ import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.StateBuilders
 import androidx.wear.protolayout.TypeBuilders.FloatProp
+import androidx.wear.protolayout.expression.AnimationParameterBuilders.AnimationParameters
+import androidx.wear.protolayout.expression.AnimationParameterBuilders.AnimationSpec
 import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
 import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.CircularProgressIndicator
@@ -20,10 +22,10 @@ import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.example.waterlogged.tile.MainTileService.Companion.KEY_WATER_INTAKE_RATIO
 import com.example.waterlogged.tile.previewResources
 import com.example.waterlogged.tools.WaterLog
 import com.example.waterlogged.tools.getWater
+import com.example.waterlogged.tools.getWaterFromCache
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 import kotlinx.coroutines.*
@@ -59,22 +61,35 @@ private fun buttonsLayout(context: Context): Column {
         .build()
 }
 
-private fun circularProgressLayout(progress: Double): CircularProgressIndicator {
+private fun circularProgressLayout(progress: Double, cachedProgress: Double?): CircularProgressIndicator {
+    val animationStart = cachedProgress ?: 0.0
+
     return CircularProgressIndicator.Builder()
         .setStartAngle(30.0f)
         .setEndAngle(330.0f)
         .setProgress(FloatProp.Builder()
             .setValue(progress.toFloat())
-            // TODO - find a way to get this to work
-//            .setDynamicValue(DynamicFloat.from(KEY_WATER_INTAKE_RATIO).animate())
+            .setDynamicValue(DynamicFloat.animate(
+                animationStart.toFloat(),
+                progress.toFloat(),
+                AnimationSpec.Builder().setAnimationParameters(
+                    AnimationParameters.Builder().setDurationMillis(1000).build()
+                ).build()
+            ))
             .build())
         .build()
 }
 
-fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement {
-    val water = runBlocking {
-        return@runBlocking getWater(context)
-    }.getOrDefault(WaterLog())
+fun waterLayout(context: Context, readFromCache: Boolean = false): LayoutElementBuilders.LayoutElement {
+    val cachedWater = getWaterFromCache(context)
+
+    val water = if (!readFromCache) {
+        runBlocking {
+            return@runBlocking getWater(context)
+        }.getOrDefault(WaterLog())
+    } else {
+        cachedWater
+    }
 
     return EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
         .setResponsiveContentInsetEnabled(true)
@@ -84,7 +99,7 @@ fun waterLayout(context: Context): LayoutElementBuilders.LayoutElement {
 //                .setColor(ColorProp.Builder(Color.WHITE).build())
 //                .build())
         .setContent(buttonsLayout(context))
-        .setEdgeContent(circularProgressLayout(water.waterGoalProgress))
+        .setEdgeContent(circularProgressLayout(water!!.waterGoalProgress, cachedWater?.waterGoalProgress))
         .build()
 }
 

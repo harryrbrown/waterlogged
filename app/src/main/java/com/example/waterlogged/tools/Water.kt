@@ -14,6 +14,26 @@ data class WaterLog(
     val waterGoalProgress: Double = 0.0
 )
 
+fun getWaterFromCache(context: Context): WaterLog? {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    if (!sharedPreferences.contains("water.water")) {
+        return null
+    }
+
+    val water = sharedPreferences.getFloat("water.water", 0.0f)
+    val waterGoal = sharedPreferences.getFloat("water.water_goal", 0.0f)
+    val waterGoalProgress = sharedPreferences.getFloat("water.water_goal_progress", 0.0f)
+
+    return WaterLog(water.toDouble(), waterGoal.toDouble(), waterGoalProgress.toDouble())
+}
+
+private fun writeWaterToCache(context: Context, waterLog: WaterLog) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    sharedPreferences.edit().putFloat("water.water", waterLog.water.toFloat()).apply()
+    sharedPreferences.edit().putFloat("water.water_goal", waterLog.waterGoal.toFloat()).apply()
+    sharedPreferences.edit().putFloat("water.water_goal_progress", waterLog.waterGoalProgress.toFloat()).apply()
+}
+
 suspend fun getWater(context: Context): Result<WaterLog> {
     return try {
         Log.d(TAG, "Fetching water...")
@@ -40,9 +60,11 @@ suspend fun getWater(context: Context): Result<WaterLog> {
 
         val water = waterLogJson.getJSONObject("summary").getDouble("water")
         val goal = waterGoalJson.getJSONObject("goal").getDouble("goal")
-        val progress = water / goal
+        val progress = if (goal != 0.0) { water / goal } else { 0.0 }
 
         val result = WaterLog(water, goal, progress)
+
+        writeWaterToCache(context, result)
 
         Result.success(result)
     } catch (e: CancellationException) {

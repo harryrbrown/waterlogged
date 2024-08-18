@@ -11,7 +11,6 @@ import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.StateBuilders
-import androidx.wear.protolayout.expression.DynamicDataBuilders
 import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.CompactChip
 import androidx.wear.protolayout.material.Text
@@ -19,7 +18,6 @@ import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.example.waterlogged.R
-import com.example.waterlogged.tile.MainTileService.Companion.KEY_WATER_INTAKE_RATIO
 import com.example.waterlogged.tile.previewResources
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
@@ -40,11 +38,7 @@ fun addWaterLayout(context: Context, container: String, amount: String): LayoutE
         context,
         Clickable.Builder()
             .setId("add_${amount}ml")
-            .setOnClick(
-                ActionBuilders.LoadAction.Builder()
-                    .setRequestState(
-                        StateBuilders.State.Builder().addKeyToValueMapping(KEY_WATER_INTAKE_RATIO, DynamicDataBuilders.DynamicDataValue.fromFloat(0.5f)) .build())
-                    .build())
+            .setOnClick(ActionBuilders.LoadAction.Builder().build())
             .build(),
         buildDeviceParameters(context.resources))
             .setPrimaryLabelContent("${context.getString(R.string.add)} $containerName")
