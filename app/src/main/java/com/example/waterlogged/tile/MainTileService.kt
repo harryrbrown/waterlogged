@@ -51,8 +51,10 @@ class MainTileService : SuspendingTileService() {
             refreshTokens(this)
         }
 
-        if (requestParams.currentState.lastClickableId == "add_250ml") {
-            postWater(this, "250")
+        when (requestParams.currentState.lastClickableId) {
+            "add_250ml" -> postWater(this, "250")
+            "add_500ml" -> postWater(this, "500")
+            "add_750ml" -> postWater(this, "750")
         }
 
         val state = StateBuilders.State.Builder()
@@ -78,7 +80,8 @@ class MainTileService : SuspendingTileService() {
 
         return TileBuilders.Tile.Builder().setResourcesVersion(RESOURCES_VERSION)
             .setState(state)
-            .setTileTimeline(timeline).build()
+            .setTileTimeline(timeline)
+            .build()
     }
 }
 
