@@ -5,7 +5,8 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">From the Square world,\nHello, %1$s!</string>
-    <string name="tile_label">Example tile</string>
+    <string name="tile_label">Quick add water</string>
+    <string name="tile_description">Quickly record water to Fitbit</string>
     <string name="complication_label">Example complication</string>
     <string name="start_auth_flow">Authenticate</string>
     <string name="oauth_device_authorization_grant">OAuth Device Authorization Grant</string>

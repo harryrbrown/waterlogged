@@ -32,6 +32,7 @@
             android:name=".tile.MainTileService"
             android:exported="true"
             android:label="@string/tile_label"
+            android:description="@string/tile_description"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
                 <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />

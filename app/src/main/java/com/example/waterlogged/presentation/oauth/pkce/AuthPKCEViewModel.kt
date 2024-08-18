@@ -206,7 +206,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                     "Authorization" to "Bearer $token"
                 )
             )
-            Result.success(responseJson.getString("user"))
+            Result.success(responseJson.getJSONObject("user").getString("displayName"))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
