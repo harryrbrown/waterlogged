@@ -13,8 +13,10 @@ import androidx.wear.phone.interactions.authentication.CodeVerifier
 import androidx.wear.phone.interactions.authentication.OAuthRequest
 import androidx.wear.phone.interactions.authentication.OAuthResponse
 import androidx.wear.phone.interactions.authentication.RemoteAuthClient
+import androidx.wear.tiles.TileService
 import com.hrb116.waterlogged.BuildConfig
 import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.tile.MainTileService
 import com.hrb116.waterlogged.tools.doGetRequest
 import com.hrb116.waterlogged.tools.doPostRequest
 import com.hrb116.waterlogged.tools.putValue
@@ -185,6 +187,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             )
 
             writeTokensToKeystore(result)
+            TileService.getUpdater(context).requestUpdate(MainTileService::class.java)
             Result.success(result)
         } catch (e: CancellationException) {
             throw e
