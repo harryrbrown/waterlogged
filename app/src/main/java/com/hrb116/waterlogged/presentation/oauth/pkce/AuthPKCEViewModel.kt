@@ -1,4 +1,4 @@
-package com.example.waterlogged.presentation.oauth.pkce
+package com.hrb116.waterlogged.presentation.oauth.pkce
 
 // Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
 
@@ -13,11 +13,11 @@ import androidx.wear.phone.interactions.authentication.CodeVerifier
 import androidx.wear.phone.interactions.authentication.OAuthRequest
 import androidx.wear.phone.interactions.authentication.OAuthResponse
 import androidx.wear.phone.interactions.authentication.RemoteAuthClient
-import com.example.waterlogged.BuildConfig
-import com.example.waterlogged.R
-import com.example.waterlogged.tools.doGetRequest
-import com.example.waterlogged.tools.doPostRequest
-import com.example.waterlogged.tools.putValue
+import com.hrb116.waterlogged.BuildConfig
+import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.tools.doGetRequest
+import com.hrb116.waterlogged.tools.doPostRequest
+import com.hrb116.waterlogged.tools.putValue
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -174,7 +174,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                     "code" to code,
                     "code_verifier" to codeVerifier.value,
                     "grant_type" to "authorization_code",
-                    "redirect_uri" to "https://wear.googleapis.com/3p_auth/com.example.waterlogged"
+                    "redirect_uri" to "https://wear.googleapis.com/3p_auth/com.hrb116.waterlogged"
                 )
             )
 

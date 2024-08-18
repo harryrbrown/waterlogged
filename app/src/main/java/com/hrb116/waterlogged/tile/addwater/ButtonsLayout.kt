@@ -1,4 +1,4 @@
-package com.example.waterlogged.tile.addwater
+package com.hrb116.waterlogged.tile.addwater
 
 import android.content.Context
 import android.graphics.Color
@@ -22,10 +22,10 @@ import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.example.waterlogged.tile.previewResources
-import com.example.waterlogged.tools.WaterLog
-import com.example.waterlogged.tools.getWater
-import com.example.waterlogged.tools.getWaterFromCache
+import com.hrb116.waterlogged.tile.previewResources
+import com.hrb116.waterlogged.tools.WaterLog
+import com.hrb116.waterlogged.tools.getWater
+import com.hrb116.waterlogged.tools.getWaterFromCache
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 import kotlinx.coroutines.*

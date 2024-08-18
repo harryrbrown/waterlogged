@@ -1,4 +1,4 @@
-package com.example.waterlogged.tile
+package com.hrb116.waterlogged.tile
 
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ResourceBuilders
@@ -9,14 +9,14 @@ import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
 import androidx.wear.protolayout.expression.DynamicDataBuilders
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
-import com.example.waterlogged.R
-import com.example.waterlogged.tile.addwater.addWaterLayout
-import com.example.waterlogged.tile.addwater.waterLayout
-import com.example.waterlogged.tile.login.loginLayout
-import com.example.waterlogged.tools.getValue
-import com.example.waterlogged.tools.isTokenExpired
-import com.example.waterlogged.tools.postWater
-import com.example.waterlogged.tools.refreshTokens
+import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.tile.addwater.addWaterLayout
+import com.hrb116.waterlogged.tile.addwater.waterLayout
+import com.hrb116.waterlogged.tile.login.loginLayout
+import com.hrb116.waterlogged.tools.getValue
+import com.hrb116.waterlogged.tools.isTokenExpired
+import com.hrb116.waterlogged.tools.postWater
+import com.hrb116.waterlogged.tools.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.drawableResToImageResource

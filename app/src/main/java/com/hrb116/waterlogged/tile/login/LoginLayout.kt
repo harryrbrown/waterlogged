@@ -1,4 +1,4 @@
-package com.example.waterlogged.tile.login
+package com.hrb116.waterlogged.tile.login
 
 import android.content.Context
 import android.graphics.Color
@@ -19,8 +19,8 @@ import androidx.wear.protolayout.material.Text
 import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.example.waterlogged.R
-import com.example.waterlogged.tile.previewResources
+import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.tile.previewResources
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 
@@ -45,8 +45,8 @@ private fun loginColumnLayout(context: Context): Column {
             .setOnClick(
                 ActionBuilders.LaunchAction.Builder().setAndroidActivity(
                     AndroidActivity.Builder()
-                        .setPackageName("com.example.waterlogged")
-                        .setClassName("com.example.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
+                        .setPackageName("com.hrb116.waterlogged")
+                        .setClassName("com.hrb116.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
                         .build()
                     ).build())
             .build(),

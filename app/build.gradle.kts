@@ -12,11 +12,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.waterlogged"
+    namespace = "com.hrb116.waterlogged"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.waterlogged"
+        applicationId = "com.hrb116.waterlogged"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

@@ -1,8 +1,8 @@
-package com.example.waterlogged.tools
+package com.hrb116.waterlogged.tools
 
 import android.content.Context
 import android.util.Log
-import com.example.waterlogged.BuildConfig
+import com.hrb116.waterlogged.BuildConfig
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDateTime
 

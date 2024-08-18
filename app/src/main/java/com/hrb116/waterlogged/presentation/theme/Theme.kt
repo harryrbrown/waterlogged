@@ -1,4 +1,4 @@
-package com.example.waterlogged.presentation.theme
+package com.hrb116.waterlogged.presentation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme

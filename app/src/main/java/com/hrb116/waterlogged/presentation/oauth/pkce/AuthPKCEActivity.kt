@@ -1,4 +1,4 @@
-package com.example.waterlogged.presentation.oauth.pkce
+package com.hrb116.waterlogged.presentation.oauth.pkce
 
 // Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
 
@@ -21,7 +21,7 @@ import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
-import com.example.waterlogged.R
+import com.hrb116.waterlogged.R
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.AppScaffold
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
