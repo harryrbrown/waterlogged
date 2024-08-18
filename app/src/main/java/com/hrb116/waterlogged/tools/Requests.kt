@@ -2,6 +2,8 @@
 
 package com.hrb116.waterlogged.tools
 
+// Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
+
 import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -13,9 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-/**
- * Simple implementation of a POST request. Normally you'd use a library to do these requests.
- */
 suspend fun doPostRequest(
     url: String,
     params: Map<String, String>,
@@ -54,9 +53,6 @@ suspend fun doPostRequest(
     }
 }
 
-/**
- * Simple implementation of a GET request. Normally you'd use a library to do these requests.
- */
 suspend fun doGetRequest(
     url: String,
     requestHeaders: Map<String, String>,

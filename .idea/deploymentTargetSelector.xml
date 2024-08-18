@@ -7,7 +7,7 @@
       </SelectionState>
       <SelectionState runConfigName="waterlogged">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-11T19:19:17.896416Z">
+        <DropdownSelection timestamp="2024-08-18T01:03:53.233429Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=38081RTJWW3WKR" />
