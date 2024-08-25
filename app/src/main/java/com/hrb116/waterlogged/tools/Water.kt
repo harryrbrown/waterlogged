@@ -44,6 +44,30 @@ fun saveWaterUnit(context: Context, unit: String) {
     sharedPreferences.edit().putString("water.water_unit", unit).apply()
 }
 
+fun getLocalisedWaterVolume(context: Context, container: String): String {
+    val unit = getWaterUnit(context) ?: "ml"
+    if (unit == "ml") {
+        return when (container) {
+            "glass" -> "250 ml"
+            "bottle" -> "500 ml"
+            else -> "750 ml"
+        }
+    } else if (unit == "fl oz") {
+        return when (container) {
+            "glass" -> "8 oz"
+            "bottle" -> "16 oz"
+            else -> "24 oz"
+        }
+    } else {
+        // cup
+        return when (container) {
+            "glass" -> "1 cup"
+            "bottle" -> "2 cups"
+            else -> "3 cups"
+        }
+    }
+}
+
 suspend fun getWater(context: Context): Result<WaterLog> {
     return try {
         Log.d(TAG, "Fetching water...")
@@ -85,9 +109,11 @@ suspend fun getWater(context: Context): Result<WaterLog> {
     }
 }
 
-suspend fun postWater(context: Context, amount: String) {
+suspend fun postWater(context: Context, container: String) {
     try {
-        Log.d(TAG, "Saving ${amount}ml of water...")
+        val amountString = getLocalisedWaterVolume(context, container)
+        val amount = amountString.split(" ")[0]
+        Log.d(TAG, "Saving $amountString of water...")
 
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val token = getValue(context, "access_token")
@@ -96,7 +122,8 @@ suspend fun postWater(context: Context, amount: String) {
             url = "https://api.fitbit.com/1/user/-/foods/log/water.json",
             params = mapOf(
                 "amount" to amount,
-                "date" to date
+                "date" to date,
+                "unit" to (getWaterUnit(context) ?: "ml")
             ),
             requestHeaders = mapOf(
                 "Authorization" to "Bearer $token"

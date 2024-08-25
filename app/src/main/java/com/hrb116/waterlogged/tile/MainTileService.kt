@@ -41,9 +41,9 @@ class MainTileService : SuspendingTileService() {
         }
 
         when (requestParams.currentState.lastClickableId) {
-            "add_glass" -> postWater(this, "250")
-            "add_bottle" -> postWater(this, "500")
-            "add_large_bottle" -> postWater(this, "750")
+            "add_glass" -> postWater(this, "glass")
+            "add_bottle" -> postWater(this, "bottle")
+            "add_large_bottle" -> postWater(this, "large_bottle")
         }
 
         val timeline = TimelineBuilders.Timeline.fromLayoutElement(
