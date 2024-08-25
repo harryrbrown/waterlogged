@@ -21,8 +21,9 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.previewResources
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
+import com.hrb116.waterlogged.tools.getWaterUnit
 
-fun addWaterLayout(context: Context, container: String, amount: String): LayoutElementBuilders.LayoutElement {
+fun addWaterLayout(context: Context, container: String): LayoutElementBuilders.LayoutElement {
     val containerName = when (container) {
         "glass" -> "glass"
         "bottle" -> "bottle"
@@ -34,6 +35,8 @@ fun addWaterLayout(context: Context, container: String, amount: String): LayoutE
         .setColor(ColorProp.Builder(Color.WHITE).build())
         .build()
 
+    val contentChipSecondaryLabelText = getLocalisedWaterVolume(context, container)
+
     val contentChip = Chip.Builder(
         context,
         Clickable.Builder()
@@ -42,7 +45,7 @@ fun addWaterLayout(context: Context, container: String, amount: String): LayoutE
             .build(),
         buildDeviceParameters(context.resources))
             .setPrimaryLabelContent("${context.getString(R.string.add)} $containerName")
-            .setSecondaryLabelContent("${amount}ml")
+            .setSecondaryLabelContent(contentChipSecondaryLabelText)
             .setIconContent(container)
             .setWidth(expand())
             .build()
@@ -70,8 +73,32 @@ fun addWaterLayout(context: Context, container: String, amount: String): LayoutE
         .build()
 }
 
+private fun getLocalisedWaterVolume(context: Context, container: String): String {
+    val unit = getWaterUnit(context) ?: "ml"
+    if (unit == "ml") {
+        return when (container) {
+            "glass" -> "250ml"
+            "bottle" -> "500ml"
+            else -> "750ml"
+        }
+    } else if (unit == "fl oz") {
+        return when (container) {
+            "glass" -> "8oz"
+            "bottle" -> "16oz"
+            else -> "24oz"
+        }
+    } else {
+        // cup
+        return when (container) {
+            "glass" -> "1 cup"
+            "bottle" -> "2 cups"
+            else -> "3 cups"
+        }
+    }
+}
+
 @Preview(device = WearDevices.SMALL_ROUND)
 @Preview(device = WearDevices.LARGE_ROUND)
 @Composable
 fun AddWaterTilePreview() =
-    LayoutRootPreview(root = addWaterLayout(LocalContext.current, "large_bottle", "750"), tileResourcesFn = previewResources)
+    LayoutRootPreview(root = addWaterLayout(LocalContext.current, "large_bottle"), tileResourcesFn = previewResources)
