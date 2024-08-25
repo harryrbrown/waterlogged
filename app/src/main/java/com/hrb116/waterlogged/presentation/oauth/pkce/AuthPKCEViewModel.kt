@@ -20,6 +20,7 @@ import com.hrb116.waterlogged.tile.MainTileService
 import com.hrb116.waterlogged.tools.doGetRequest
 import com.hrb116.waterlogged.tools.doPostRequest
 import com.hrb116.waterlogged.tools.putValue
+import com.hrb116.waterlogged.tools.saveWaterUnit
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -209,6 +210,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                     "Authorization" to "Bearer $token"
                 )
             )
+            saveWaterUnitFromProfile(responseJson.getJSONObject("user").getString("waterUnitName"))
             Result.success(responseJson.getJSONObject("user").getString("displayName"))
         } catch (e: CancellationException) {
             throw e
@@ -222,5 +224,9 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
         putValue(context, "access_token", tokens.accessToken)
         putValue(context, "refresh_token", tokens.refreshToken)
         putValue(context, "expires_at", tokens.expiresAt.toString())
+    }
+
+    private fun saveWaterUnitFromProfile(unit: String) {
+        saveWaterUnit(context, unit)
     }
 }
