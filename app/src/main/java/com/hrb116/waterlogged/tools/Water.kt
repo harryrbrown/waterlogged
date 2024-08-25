@@ -34,6 +34,16 @@ private fun writeWaterToCache(context: Context, waterLog: WaterLog) {
     sharedPreferences.edit().putFloat("water.water_goal_progress", waterLog.waterGoalProgress.toFloat()).apply()
 }
 
+fun getWaterUnit(context: Context): String? {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    return sharedPreferences.getString("water.water_unit", null)
+}
+
+fun saveWaterUnit(context: Context, unit: String) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    sharedPreferences.edit().putString("water.water_unit", unit).apply()
+}
+
 suspend fun getWater(context: Context): Result<WaterLog> {
     return try {
         Log.d(TAG, "Fetching water...")
