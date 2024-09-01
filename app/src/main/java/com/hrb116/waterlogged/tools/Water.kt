@@ -2,6 +2,8 @@ package com.hrb116.waterlogged.tools
 
 import android.content.Context
 import android.util.Log
+import com.hrb116.waterlogged.tools.tokens.Tokens
+import com.hrb116.waterlogged.tools.tokens.getValue
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.CancellationException
@@ -73,7 +75,7 @@ suspend fun getWater(context: Context): Result<WaterLog> {
         Log.d(TAG, "Fetching water...")
 
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val token = getValue(context, "access_token")
+        val token = getValue(context, Tokens.ACCESS_TOKEN)
 
         val waterLogJson = doGetRequest(
             url = "https://api.fitbit.com/1/user/-/foods/log/water/date/$date.json",
@@ -116,7 +118,7 @@ suspend fun postWater(context: Context, container: WaterContainers) {
         Log.d(TAG, "Saving $amountString of water...")
 
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val token = getValue(context, "access_token")
+        val token = getValue(context, Tokens.ACCESS_TOKEN)
 
         val responseJson = doPostRequest(
             url = "https://api.fitbit.com/1/user/-/foods/log/water.json",

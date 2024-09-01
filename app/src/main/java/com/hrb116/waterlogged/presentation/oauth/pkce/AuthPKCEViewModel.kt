@@ -19,8 +19,9 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.MainTileService
 import com.hrb116.waterlogged.tools.doGetRequest
 import com.hrb116.waterlogged.tools.doPostRequest
-import com.hrb116.waterlogged.tools.putValue
+import com.hrb116.waterlogged.tools.tokens.putValue
 import com.hrb116.waterlogged.tools.saveWaterUnit
+import com.hrb116.waterlogged.tools.tokens.Tokens as WaterloggedTokens
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -182,8 +183,8 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             )
 
             val result = Tokens(
-                responseJson.getString("access_token"),
-                responseJson.getString("refresh_token"),
+                responseJson.getString(WaterloggedTokens.ACCESS_TOKEN.token_name),
+                responseJson.getString(WaterloggedTokens.REFRESH_TOKEN.token_name),
                 LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
             )
 
@@ -221,9 +222,9 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun writeTokensToKeystore(tokens: Tokens) {
-        putValue(context, "access_token", tokens.accessToken)
-        putValue(context, "refresh_token", tokens.refreshToken)
-        putValue(context, "expires_at", tokens.expiresAt.toString())
+        putValue(context, WaterloggedTokens.ACCESS_TOKEN, tokens.accessToken)
+        putValue(context, WaterloggedTokens.REFRESH_TOKEN, tokens.refreshToken)
+        putValue(context, WaterloggedTokens.EXPIRES_AT, tokens.expiresAt.toString())
     }
 
     private fun saveWaterUnitFromProfile(unit: String) {

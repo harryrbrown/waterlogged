@@ -21,11 +21,11 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.hrb116.waterlogged.R
-import com.hrb116.waterlogged.tools.getValue
-import com.hrb116.waterlogged.tools.isTokenExpired
-import com.hrb116.waterlogged.tools.refreshTokens
+import com.hrb116.waterlogged.tools.tokens.Tokens
+import com.hrb116.waterlogged.tools.tokens.getValue
+import com.hrb116.waterlogged.tools.tokens.isTokenExpired
+import com.hrb116.waterlogged.tools.tokens.refreshTokens
 import kotlinx.coroutines.runBlocking
-import kotlin.reflect.KSuspendFunction1
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
@@ -34,7 +34,7 @@ fun ListScreen(
     refetchUserData: suspend (String) -> Result<String>
 ) {
     val context = LocalContext.current
-    val accessToken = getValue(context, "access_token")
+    val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
     val isAuthenticated = accessToken != null
 
     if (!isAuthenticated) {

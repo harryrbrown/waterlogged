@@ -8,14 +8,15 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.addwater.addWaterLayout
 import com.hrb116.waterlogged.tile.addwater.waterLayout
 import com.hrb116.waterlogged.tile.login.loginLayout
-import com.hrb116.waterlogged.tools.getValue
-import com.hrb116.waterlogged.tools.isTokenExpired
+import com.hrb116.waterlogged.tools.tokens.getValue
+import com.hrb116.waterlogged.tools.tokens.isTokenExpired
 import com.hrb116.waterlogged.tools.postWater
-import com.hrb116.waterlogged.tools.refreshTokens
+import com.hrb116.waterlogged.tools.tokens.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.drawableResToImageResource
 import com.hrb116.waterlogged.tools.WaterContainers
+import com.hrb116.waterlogged.tools.tokens.Tokens
 
 private const val RESOURCES_VERSION = "0"
 
@@ -36,7 +37,7 @@ class MainTileService : SuspendingTileService() {
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
-        val isAuthenticated = getValue(this, "access_token") != null
+        val isAuthenticated = getValue(this, Tokens.ACCESS_TOKEN) != null
         if (isTokenExpired(this)) {
             refreshTokens(this)
         }
