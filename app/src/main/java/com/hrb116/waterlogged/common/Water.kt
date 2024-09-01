@@ -18,32 +18,32 @@ data class WaterLog(
 
 fun getWaterFromCache(context: Context): WaterLog? {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-    if (!sharedPreferences.contains("water.water")) {
+    if (!sharedPreferences.contains(Preferences.WATER.key)) {
         return null
     }
 
-    val water = sharedPreferences.getFloat("water.water", 0.0f)
-    val waterGoal = sharedPreferences.getFloat("water.water_goal", 0.0f)
-    val waterGoalProgress = sharedPreferences.getFloat("water.water_goal_progress", 0.0f)
+    val water = sharedPreferences.getFloat(Preferences.WATER.key, 0.0f)
+    val waterGoal = sharedPreferences.getFloat(Preferences.WATER_GOAL.key, 0.0f)
+    val waterGoalProgress = sharedPreferences.getFloat(Preferences.WATER_GOAL_PROGRESS.key, 0.0f)
 
     return WaterLog(water.toDouble(), waterGoal.toDouble(), waterGoalProgress.toDouble())
 }
 
 private fun writeWaterToCache(context: Context, waterLog: WaterLog) {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-    sharedPreferences.edit().putFloat("water.water", waterLog.water.toFloat()).apply()
-    sharedPreferences.edit().putFloat("water.water_goal", waterLog.waterGoal.toFloat()).apply()
-    sharedPreferences.edit().putFloat("water.water_goal_progress", waterLog.waterGoalProgress.toFloat()).apply()
+    sharedPreferences.edit().putFloat(Preferences.WATER.key, waterLog.water.toFloat()).apply()
+    sharedPreferences.edit().putFloat(Preferences.WATER_GOAL.key, waterLog.waterGoal.toFloat()).apply()
+    sharedPreferences.edit().putFloat(Preferences.WATER_GOAL_PROGRESS.key, waterLog.waterGoalProgress.toFloat()).apply()
 }
 
 fun getWaterUnit(context: Context): String? {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-    return sharedPreferences.getString("water.water_unit", null)
+    return sharedPreferences.getString(Preferences.WATER_UNIT.key, null)
 }
 
 fun saveWaterUnit(context: Context, unit: String) {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-    sharedPreferences.edit().putString("water.water_unit", unit).apply()
+    sharedPreferences.edit().putString(Preferences.WATER_UNIT.key, unit).apply()
 }
 
 fun getLocalisedWaterVolume(context: Context, container: WaterContainers): String {
