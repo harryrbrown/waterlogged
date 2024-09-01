@@ -49,9 +49,9 @@ class MainTileService : SuspendingTileService() {
 
         val timeline = TimelineBuilders.Timeline.fromLayoutElement(
             when (requestParams.currentState.lastClickableId) {
-                "glass" -> addWaterLayout(this, WaterContainers.GLASS.container)
-                "bottle" -> addWaterLayout(this, WaterContainers.BOTTLE.container)
-                "large_bottle" -> addWaterLayout(this, WaterContainers.LARGE_BOTTLE.container)
+                "glass" -> addWaterLayout(this, WaterContainers.GLASS)
+                "bottle" -> addWaterLayout(this, WaterContainers.BOTTLE)
+                "large_bottle" -> addWaterLayout(this, WaterContainers.LARGE_BOTTLE)
                 else -> {
                     if (isAuthenticated && !isTokenExpired(this)) {
                         waterLayout(this, requestParams.currentState.lastClickableId == "back")

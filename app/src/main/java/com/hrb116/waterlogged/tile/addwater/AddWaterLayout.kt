@@ -25,10 +25,10 @@ import com.hrb116.waterlogged.tools.WaterContainers
 import com.hrb116.waterlogged.tools.getLocalisedWaterVolume
 import com.hrb116.waterlogged.tools.getWaterUnit
 
-fun addWaterLayout(context: Context, container: String): LayoutElementBuilders.LayoutElement {
+fun addWaterLayout(context: Context, container: WaterContainers): LayoutElementBuilders.LayoutElement {
     val containerName = when (container) {
-        WaterContainers.GLASS.container -> "glass"
-        WaterContainers.BOTTLE.container -> "bottle"
+        WaterContainers.GLASS -> "glass"
+        WaterContainers.BOTTLE -> "bottle"
         else -> "large bottle"
     }
 
@@ -48,7 +48,7 @@ fun addWaterLayout(context: Context, container: String): LayoutElementBuilders.L
         buildDeviceParameters(context.resources))
             .setPrimaryLabelContent("${context.getString(R.string.add)} $containerName")
             .setSecondaryLabelContent(contentChipSecondaryLabelText)
-            .setIconContent(container)
+            .setIconContent(container.container)
             .setWidth(expand())
             .build()
 
@@ -79,4 +79,4 @@ fun addWaterLayout(context: Context, container: String): LayoutElementBuilders.L
 @Preview(device = WearDevices.LARGE_ROUND)
 @Composable
 fun AddWaterTilePreview() =
-    LayoutRootPreview(root = addWaterLayout(LocalContext.current, WaterContainers.LARGE_BOTTLE.container), tileResourcesFn = previewResources)
+    LayoutRootPreview(root = addWaterLayout(LocalContext.current, WaterContainers.LARGE_BOTTLE), tileResourcesFn = previewResources)
