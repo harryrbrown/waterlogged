@@ -44,25 +44,25 @@ fun saveWaterUnit(context: Context, unit: String) {
     sharedPreferences.edit().putString("water.water_unit", unit).apply()
 }
 
-fun getLocalisedWaterVolume(context: Context, container: String): String {
+fun getLocalisedWaterVolume(context: Context, container: WaterContainers): String {
     val unit = getWaterUnit(context) ?: "ml"
     if (unit == "ml") {
         return when (container) {
-            "glass" -> "250 ml"
-            "bottle" -> "500 ml"
+            WaterContainers.GLASS -> "250 ml"
+            WaterContainers.BOTTLE -> "500 ml"
             else -> "750 ml"
         }
     } else if (unit == "fl oz") {
         return when (container) {
-            "glass" -> "8 oz"
-            "bottle" -> "16 oz"
+            WaterContainers.GLASS -> "8 oz"
+            WaterContainers.BOTTLE -> "16 oz"
             else -> "24 oz"
         }
     } else {
         // cup
         return when (container) {
-            "glass" -> "1 cup"
-            "bottle" -> "2 cups"
+            WaterContainers.GLASS -> "1 cup"
+            WaterContainers.BOTTLE -> "2 cups"
             else -> "3 cups"
         }
     }
@@ -109,7 +109,7 @@ suspend fun getWater(context: Context): Result<WaterLog> {
     }
 }
 
-suspend fun postWater(context: Context, container: String) {
+suspend fun postWater(context: Context, container: WaterContainers) {
     try {
         val amountString = getLocalisedWaterVolume(context, container)
         val amount = amountString.split(" ")[0]

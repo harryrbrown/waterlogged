@@ -28,6 +28,7 @@ import com.hrb116.waterlogged.tools.getWater
 import com.hrb116.waterlogged.tools.getWaterFromCache
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
+import com.hrb116.waterlogged.tools.WaterContainers
 import kotlinx.coroutines.*
 
 private fun buttonLayout(context: Context, iconId: String) =
@@ -45,9 +46,9 @@ private fun buttonLayout(context: Context, iconId: String) =
         .build()
 
 private fun buttonsLayout(context: Context): Column {
-    val glassButton = buttonLayout(context, "glass")
-    val bottleButton = buttonLayout(context, "bottle")
-    val largeBottleButton = buttonLayout(context, "large_bottle")
+    val glassButton = buttonLayout(context, WaterContainers.GLASS.container)
+    val bottleButton = buttonLayout(context, WaterContainers.BOTTLE.container)
+    val largeBottleButton = buttonLayout(context, WaterContainers.LARGE_BOTTLE.container)
     val keyboardButton = buttonLayout(context, "keyboard")
 
     val bottleButtons = MultiButtonLayout.Builder()

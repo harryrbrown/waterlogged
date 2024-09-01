@@ -21,13 +21,14 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.previewResources
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
+import com.hrb116.waterlogged.tools.WaterContainers
 import com.hrb116.waterlogged.tools.getLocalisedWaterVolume
 import com.hrb116.waterlogged.tools.getWaterUnit
 
 fun addWaterLayout(context: Context, container: String): LayoutElementBuilders.LayoutElement {
     val containerName = when (container) {
-        "glass" -> "glass"
-        "bottle" -> "bottle"
+        WaterContainers.GLASS.container -> "glass"
+        WaterContainers.BOTTLE.container -> "bottle"
         else -> "large bottle"
     }
 
@@ -78,4 +79,4 @@ fun addWaterLayout(context: Context, container: String): LayoutElementBuilders.L
 @Preview(device = WearDevices.LARGE_ROUND)
 @Composable
 fun AddWaterTilePreview() =
-    LayoutRootPreview(root = addWaterLayout(LocalContext.current, "large_bottle"), tileResourcesFn = previewResources)
+    LayoutRootPreview(root = addWaterLayout(LocalContext.current, WaterContainers.LARGE_BOTTLE.container), tileResourcesFn = previewResources)
