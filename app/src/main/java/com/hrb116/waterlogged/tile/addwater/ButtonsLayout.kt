@@ -1,12 +1,10 @@
 package com.hrb116.waterlogged.tile.addwater
 
 import android.content.Context
-import android.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.protolayout.ActionBuilders
-import androidx.wear.protolayout.ColorBuilders.ColorProp
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
@@ -17,18 +15,16 @@ import androidx.wear.protolayout.expression.AnimationParameterBuilders.Animation
 import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
 import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.CircularProgressIndicator
-import androidx.wear.protolayout.material.Text
-import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.hrb116.waterlogged.tile.previewResources
-import com.hrb116.waterlogged.tools.WaterLog
-import com.hrb116.waterlogged.tools.getWater
-import com.hrb116.waterlogged.tools.getWaterFromCache
+import com.hrb116.waterlogged.common.WaterLog
+import com.hrb116.waterlogged.common.getWater
+import com.hrb116.waterlogged.common.getWaterFromCache
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
-import com.hrb116.waterlogged.tools.WaterContainers
+import com.hrb116.waterlogged.common.WaterContainers
 import kotlinx.coroutines.*
 
 private fun buttonLayout(context: Context, iconId: String) =

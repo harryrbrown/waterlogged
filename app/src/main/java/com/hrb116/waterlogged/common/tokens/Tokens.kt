@@ -1,4 +1,4 @@
-package com.hrb116.waterlogged.tools.tokens
+package com.hrb116.waterlogged.common.tokens
 
 enum class Tokens(val token_name: String) {
     ACCESS_TOKEN("access_token"),

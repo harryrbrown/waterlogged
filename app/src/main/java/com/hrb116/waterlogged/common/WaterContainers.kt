@@ -1,4 +1,4 @@
-package com.hrb116.waterlogged.tools
+package com.hrb116.waterlogged.common
 
 enum class WaterContainers(val container: String) {
     GLASS("glass"),

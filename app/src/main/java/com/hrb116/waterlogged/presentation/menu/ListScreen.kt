@@ -21,10 +21,10 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.hrb116.waterlogged.R
-import com.hrb116.waterlogged.tools.tokens.Tokens
-import com.hrb116.waterlogged.tools.tokens.getValue
-import com.hrb116.waterlogged.tools.tokens.isTokenExpired
-import com.hrb116.waterlogged.tools.tokens.refreshTokens
+import com.hrb116.waterlogged.common.tokens.Tokens
+import com.hrb116.waterlogged.common.tokens.getValue
+import com.hrb116.waterlogged.common.tokens.isTokenExpired
+import com.hrb116.waterlogged.common.tokens.refreshTokens
 import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalHorologistApi::class)

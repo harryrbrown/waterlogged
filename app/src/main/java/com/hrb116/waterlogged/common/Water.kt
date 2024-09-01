@@ -1,9 +1,9 @@
-package com.hrb116.waterlogged.tools
+package com.hrb116.waterlogged.common
 
 import android.content.Context
 import android.util.Log
-import com.hrb116.waterlogged.tools.tokens.Tokens
-import com.hrb116.waterlogged.tools.tokens.getValue
+import com.hrb116.waterlogged.common.tokens.Tokens
+import com.hrb116.waterlogged.common.tokens.getValue
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.CancellationException
