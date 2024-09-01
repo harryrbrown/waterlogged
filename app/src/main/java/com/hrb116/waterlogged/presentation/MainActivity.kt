@@ -1,4 +1,4 @@
-package com.hrb116.waterlogged.presentation.main
+package com.hrb116.waterlogged.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,6 +12,7 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.google.android.horologist.compose.layout.AppScaffold
 import com.hrb116.waterlogged.presentation.oauth.pkce.AuthPKCEViewModel
 import com.hrb116.waterlogged.presentation.oauth.pkce.AuthenticateScreen
+import com.hrb116.waterlogged.presentation.menu.ListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,22 +28,25 @@ class MainActivity : ComponentActivity() {
 fun WearApp(pkceViewModel: AuthPKCEViewModel) {
     val navController = rememberSwipeDismissableNavController()
 
-    WearAppTheme {
-        AppScaffold {
-            val uiState = pkceViewModel.uiState.collectAsState()
-            SwipeDismissableNavHost(navController = navController, startDestination = "signin") {
-                composable("signin") {
-                    AuthenticateScreen(
-                        uiState.value.statusCode,
-                        uiState.value.resultMessage,
-                        pkceViewModel::startAuthFlow,
-                        onShowMainMenu = { navController.navigate("menu") }
-                    )
-                }
-                composable("menu") {
-                    ListScreen()
-                }
+//    WearAppTheme {
+    AppScaffold {
+        val uiState = pkceViewModel.uiState.collectAsState()
+        SwipeDismissableNavHost(navController = navController, startDestination = "signin") {
+            composable("signin") {
+                AuthenticateScreen(
+                    uiState.value.statusCode,
+                    uiState.value.resultMessage,
+                    pkceViewModel::startAuthFlow,
+                    onShowMainMenu = { navController.navigate("menu") }
+                )
+            }
+            composable("menu") {
+                ListScreen(
+                    onSignedOut = { navController.navigate("signin") },
+                    refetchUserData = pkceViewModel::retrieveUserProfile
+                )
             }
         }
     }
+//    }
 }

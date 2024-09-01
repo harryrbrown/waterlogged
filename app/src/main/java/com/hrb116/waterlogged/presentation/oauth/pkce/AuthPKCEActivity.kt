@@ -31,30 +31,31 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnStat
 
 class AuthPKCEActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent { PKCEApp(pkceViewModel = viewModel()) }
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent { PKCEApp(pkceViewModel = viewModel()) }
+//    }
 }
 
-@Composable
-fun PKCEApp(pkceViewModel: AuthPKCEViewModel) {
-    AppScaffold {
-        val uiState = pkceViewModel.uiState.collectAsState()
-        AuthenticateScreen(
-            uiState.value.statusCode,
-            uiState.value.resultMessage,
-            pkceViewModel::startAuthFlow
-        )
-    }
-}
+//@Composable
+//fun PKCEApp(pkceViewModel: AuthPKCEViewModel) {
+//    AppScaffold {
+//        val uiState = pkceViewModel.uiState.collectAsState()
+//        AuthenticateScreen(
+//            uiState.value.statusCode,
+//            uiState.value.resultMessage,
+//            pkceViewModel::startAuthFlow
+//        )
+//    }
+//}
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun AuthenticateScreen(
     statusCode: Int,
     resultMessage: String,
-    startAuthFlow: () -> Unit
+    startAuthFlow: () -> Unit,
+    onShowMainMenu: () -> Unit
 ) {
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
@@ -80,7 +81,7 @@ fun AuthenticateScreen(
             }
             item {
                 Chip(
-                    onClick = { startAuthFlow() },
+                    onClick = { startAuthFlow(); onShowMainMenu() },
                     label = {
                         Text(
                             text = stringResource(R.string.sign_in_on_phone)
@@ -105,7 +106,8 @@ fun AuthenticateScreenPreview() {
     AuthenticateScreen(
         statusCode = R.string.status_retrieved,
         resultMessage = "Bobby Bonson",
-        startAuthFlow = {}
+        startAuthFlow = {},
+        onShowMainMenu = {}
     )
 }
 
@@ -116,6 +118,7 @@ fun AuthenticateScreenFailedPreview() {
     AuthenticateScreen(
         statusCode = R.string.status_failed,
         resultMessage = "",
-        startAuthFlow = {}
+        startAuthFlow = {},
+        onShowMainMenu = {}
     )
 }

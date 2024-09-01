@@ -202,7 +202,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
      * Using the access token, make an authorized request to the Auth server to retrieve the user's
      * profile.
      */
-    private suspend fun retrieveUserProfile(token: String): Result<String> {
+    suspend fun retrieveUserProfile(token: String): Result<String> {
         return try {
             val responseJson = doGetRequest(
                 url = "https://api.fitbit.com/1/user/-/profile.json",
