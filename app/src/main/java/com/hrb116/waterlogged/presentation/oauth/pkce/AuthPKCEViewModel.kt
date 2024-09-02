@@ -19,6 +19,7 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.MainTileService
 import com.hrb116.waterlogged.common.networking.doGetRequest
 import com.hrb116.waterlogged.common.networking.doPostRequest
+import com.hrb116.waterlogged.common.preferences.saveUserName
 import com.hrb116.waterlogged.common.tokens.putValue
 import com.hrb116.waterlogged.common.preferences.saveWaterUnit
 import com.hrb116.waterlogged.common.tokens.Tokens as WaterloggedTokens
@@ -75,7 +76,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
      * the phone. After the user consents on their phone, the wearable app is notified and can
      * continue the authorization process.
      */
-    fun startAuthFlow() {
+    fun startAuthFlow(onCompletion: () -> Unit) {
         viewModelScope.launch {
             val codeVerifier = CodeVerifier()
 
@@ -116,6 +117,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             }
 
             showStatus(R.string.status_retrieved, userName)
+            onCompletion()
         }
     }
 
@@ -211,7 +213,10 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                     "Authorization" to "Bearer $token"
                 )
             )
-            saveWaterUnitFromProfile(responseJson.getJSONObject("user").getString("waterUnitName"))
+            saveUserInfoProfile(
+                unit = responseJson.getJSONObject("user").getString("waterUnitName"),
+                username = responseJson.getJSONObject("user").getString("displayName")
+            )
             Result.success(responseJson.getJSONObject("user").getString("displayName"))
         } catch (e: CancellationException) {
             throw e
@@ -227,7 +232,8 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
         putValue(context, WaterloggedTokens.EXPIRES_AT, tokens.expiresAt.toString())
     }
 
-    private fun saveWaterUnitFromProfile(unit: String) {
+    private fun saveUserInfoProfile(unit: String, username: String) {
         saveWaterUnit(context, unit)
+        saveUserName(context, username)
     }
 }

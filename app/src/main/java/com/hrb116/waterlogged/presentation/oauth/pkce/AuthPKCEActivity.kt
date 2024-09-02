@@ -2,18 +2,13 @@ package com.hrb116.waterlogged.presentation.oauth.pkce
 
 // Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
@@ -23,39 +18,17 @@ import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.hrb116.waterlogged.R
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
-import com.google.android.horologist.compose.layout.AppScaffold
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
-
-class AuthPKCEActivity : ComponentActivity() {
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent { PKCEApp(pkceViewModel = viewModel()) }
-//    }
-}
-
-//@Composable
-//fun PKCEApp(pkceViewModel: AuthPKCEViewModel) {
-//    AppScaffold {
-//        val uiState = pkceViewModel.uiState.collectAsState()
-//        AuthenticateScreen(
-//            uiState.value.statusCode,
-//            uiState.value.resultMessage,
-//            pkceViewModel::startAuthFlow
-//        )
-//    }
-//}
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun AuthenticateScreen(
     statusCode: Int,
     resultMessage: String,
-    startAuthFlow: () -> Unit,
-    onShowMainMenu: () -> Unit
+    startAuthFlow: () -> Unit
 ) {
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
@@ -81,7 +54,7 @@ fun AuthenticateScreen(
             }
             item {
                 Chip(
-                    onClick = { startAuthFlow(); onShowMainMenu() },
+                    onClick = { startAuthFlow() },
                     label = {
                         Text(
                             text = stringResource(R.string.sign_in_on_phone)
@@ -106,8 +79,7 @@ fun AuthenticateScreenPreview() {
     AuthenticateScreen(
         statusCode = R.string.status_retrieved,
         resultMessage = "Bobby Bonson",
-        startAuthFlow = {},
-        onShowMainMenu = {}
+        startAuthFlow = {}
     )
 }
 
@@ -118,7 +90,6 @@ fun AuthenticateScreenFailedPreview() {
     AuthenticateScreen(
         statusCode = R.string.status_failed,
         resultMessage = "",
-        startAuthFlow = {},
-        onShowMainMenu = {}
+        startAuthFlow = {}
     )
 }

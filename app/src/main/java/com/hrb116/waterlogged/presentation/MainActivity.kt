@@ -5,11 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.google.android.horologist.compose.layout.AppScaffold
+import com.hrb116.waterlogged.common.tokens.clearTokens
 import com.hrb116.waterlogged.presentation.oauth.pkce.AuthPKCEViewModel
 import com.hrb116.waterlogged.presentation.oauth.pkce.AuthenticateScreen
 import com.hrb116.waterlogged.presentation.menu.ListScreen
@@ -27,26 +29,24 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WearApp(pkceViewModel: AuthPKCEViewModel) {
     val navController = rememberSwipeDismissableNavController()
+    val context = LocalContext.current
 
-//    WearAppTheme {
     AppScaffold {
         val uiState = pkceViewModel.uiState.collectAsState()
-        SwipeDismissableNavHost(navController = navController, startDestination = "signin") {
+        SwipeDismissableNavHost(navController = navController, startDestination = "menu") {
             composable("signin") {
                 AuthenticateScreen(
                     uiState.value.statusCode,
                     uiState.value.resultMessage,
-                    pkceViewModel::startAuthFlow,
-                    onShowMainMenu = { navController.navigate("menu") }
+                    { (pkceViewModel::startAuthFlow){ navController.navigate("menu") } },
                 )
             }
             composable("menu") {
                 ListScreen(
-                    onSignedOut = { navController.navigate("signin") },
+                    onSignedOut = { clearTokens(context); navController.navigate("signin") },
                     refetchUserData = pkceViewModel::retrieveUserProfile
                 )
             }
         }
     }
-//    }
 }

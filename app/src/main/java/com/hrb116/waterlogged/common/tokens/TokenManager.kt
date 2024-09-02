@@ -26,6 +26,13 @@ fun isTokenExpired(context: Context): Boolean {
     return expiryTime < LocalDateTime.now()
 }
 
+fun clearTokens(context: Context) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    sharedPreferences.edit().remove(Tokens.ACCESS_TOKEN.token_name).apply()
+    sharedPreferences.edit().remove(Tokens.REFRESH_TOKEN.token_name).apply()
+    sharedPreferences.edit().remove(Tokens.EXPIRES_AT.token_name).apply()
+}
+
 suspend fun refreshTokens(context: Context): Boolean {
     try {
         Log.d(TAG, "Refreshing token...")

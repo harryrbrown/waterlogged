@@ -11,3 +11,8 @@ fun saveUserName(context: Context, unit: String) {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     sharedPreferences.edit().putString(Preferences.USER_NAME.key, unit).apply()
 }
+
+fun deleteUserName(context: Context) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    sharedPreferences.edit().remove(Preferences.USER_NAME.key).apply()
+}
