@@ -10,7 +10,7 @@ import com.hrb116.waterlogged.tile.addwater.waterLayout
 import com.hrb116.waterlogged.tile.login.loginLayout
 import com.hrb116.waterlogged.common.tokens.getValue
 import com.hrb116.waterlogged.common.tokens.isTokenExpired
-import com.hrb116.waterlogged.common.postWater
+import com.hrb116.waterlogged.common.networking.postWater
 import com.hrb116.waterlogged.common.tokens.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService

@@ -19,9 +19,9 @@ import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.hrb116.waterlogged.tile.previewResources
-import com.hrb116.waterlogged.common.WaterLog
-import com.hrb116.waterlogged.common.getWater
-import com.hrb116.waterlogged.common.getWaterFromCache
+import com.hrb116.waterlogged.common.preferences.WaterLog
+import com.hrb116.waterlogged.common.networking.getWater
+import com.hrb116.waterlogged.common.preferences.getWaterFromCache
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 import com.hrb116.waterlogged.common.WaterContainers

@@ -17,10 +17,10 @@ import androidx.wear.tiles.TileService
 import com.hrb116.waterlogged.BuildConfig
 import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.MainTileService
-import com.hrb116.waterlogged.common.doGetRequest
-import com.hrb116.waterlogged.common.doPostRequest
+import com.hrb116.waterlogged.common.networking.doGetRequest
+import com.hrb116.waterlogged.common.networking.doPostRequest
 import com.hrb116.waterlogged.common.tokens.putValue
-import com.hrb116.waterlogged.common.saveWaterUnit
+import com.hrb116.waterlogged.common.preferences.saveWaterUnit
 import com.hrb116.waterlogged.common.tokens.Tokens as WaterloggedTokens
 import java.io.IOException
 import kotlin.coroutines.resume

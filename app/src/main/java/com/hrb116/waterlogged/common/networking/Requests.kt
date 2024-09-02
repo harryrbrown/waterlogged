@@ -1,6 +1,6 @@
 @file:Suppress("BlockingMethodInNonBlockingContext")
 
-package com.hrb116.waterlogged.common
+package com.hrb116.waterlogged.common.networking
 
 // Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
 

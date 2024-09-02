@@ -22,7 +22,7 @@ import com.hrb116.waterlogged.tile.previewResources
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 import com.hrb116.waterlogged.common.WaterContainers
-import com.hrb116.waterlogged.common.getLocalisedWaterVolume
+import com.hrb116.waterlogged.common.preferences.getLocalisedWaterVolume
 
 fun addWaterLayout(context: Context, container: WaterContainers): LayoutElementBuilders.LayoutElement {
     val containerName = when (container) {

@@ -3,7 +3,7 @@ package com.hrb116.waterlogged.common.tokens
 import android.content.Context
 import android.util.Log
 import com.hrb116.waterlogged.BuildConfig
-import com.hrb116.waterlogged.common.doPostRequest
+import com.hrb116.waterlogged.common.networking.doPostRequest
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDateTime
 
