@@ -1,4 +1,4 @@
-package com.hrb116.waterlogged.tools
+package com.hrb116.waterlogged.common
 
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ModifiersBuilders

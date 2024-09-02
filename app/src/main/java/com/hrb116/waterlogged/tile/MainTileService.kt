@@ -8,13 +8,15 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.addwater.addWaterLayout
 import com.hrb116.waterlogged.tile.addwater.waterLayout
 import com.hrb116.waterlogged.tile.login.loginLayout
-import com.hrb116.waterlogged.tools.getValue
-import com.hrb116.waterlogged.tools.isTokenExpired
-import com.hrb116.waterlogged.tools.postWater
-import com.hrb116.waterlogged.tools.refreshTokens
+import com.hrb116.waterlogged.common.tokens.getValue
+import com.hrb116.waterlogged.common.tokens.isTokenExpired
+import com.hrb116.waterlogged.common.networking.postWater
+import com.hrb116.waterlogged.common.tokens.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.drawableResToImageResource
+import com.hrb116.waterlogged.common.WaterContainers
+import com.hrb116.waterlogged.common.tokens.Tokens
 
 private const val RESOURCES_VERSION = "0"
 
@@ -25,9 +27,9 @@ class MainTileService : SuspendingTileService() {
     ): ResourceBuilders.Resources {
         return ResourceBuilders.Resources.Builder()
             .setVersion(RESOURCES_VERSION)
-            .addIdToImageMapping("glass", drawableResToImageResource(R.drawable.glass_cup_24px))
-            .addIdToImageMapping("bottle", drawableResToImageResource(R.drawable.water_bottle_24px))
-            .addIdToImageMapping("large_bottle", drawableResToImageResource(R.drawable.water_bottle_large_24px))
+            .addIdToImageMapping(WaterContainers.GLASS.container, drawableResToImageResource(R.drawable.glass_cup_24px))
+            .addIdToImageMapping(WaterContainers.BOTTLE.container, drawableResToImageResource(R.drawable.water_bottle_24px))
+            .addIdToImageMapping(WaterContainers.LARGE_BOTTLE.container, drawableResToImageResource(R.drawable.water_bottle_large_24px))
             .addIdToImageMapping("keyboard", drawableResToImageResource(R.drawable.keyboard_24px))
             .build()
     }
@@ -35,22 +37,22 @@ class MainTileService : SuspendingTileService() {
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
-        val isAuthenticated = getValue(this, "access_token") != null
+        val isAuthenticated = getValue(this, Tokens.ACCESS_TOKEN) != null
         if (isTokenExpired(this)) {
             refreshTokens(this)
         }
 
         when (requestParams.currentState.lastClickableId) {
-            "add_glass" -> postWater(this, "glass")
-            "add_bottle" -> postWater(this, "bottle")
-            "add_large_bottle" -> postWater(this, "large_bottle")
+            "add_glass" -> postWater(this, WaterContainers.GLASS)
+            "add_bottle" -> postWater(this, WaterContainers.BOTTLE)
+            "add_large_bottle" -> postWater(this, WaterContainers.LARGE_BOTTLE)
         }
 
         val timeline = TimelineBuilders.Timeline.fromLayoutElement(
             when (requestParams.currentState.lastClickableId) {
-                "glass" -> addWaterLayout(this, "glass")
-                "bottle" -> addWaterLayout(this, "bottle")
-                "large_bottle" -> addWaterLayout(this, "large_bottle")
+                "glass" -> addWaterLayout(this, WaterContainers.GLASS)
+                "bottle" -> addWaterLayout(this, WaterContainers.BOTTLE)
+                "large_bottle" -> addWaterLayout(this, WaterContainers.LARGE_BOTTLE)
                 else -> {
                     if (isAuthenticated && !isTokenExpired(this)) {
                         waterLayout(this, requestParams.currentState.lastClickableId == "back")
@@ -69,8 +71,8 @@ class MainTileService : SuspendingTileService() {
 }
 
 val previewResources: ResourceBuilders.Resources.Builder.() -> Unit = {
-    addIdToImageMapping("glass", drawableResToImageResource(R.drawable.glass_cup_24px))
-    addIdToImageMapping("bottle", drawableResToImageResource(R.drawable.water_bottle_24px))
-    addIdToImageMapping("large_bottle", drawableResToImageResource(R.drawable.water_bottle_large_24px))
+    addIdToImageMapping(WaterContainers.GLASS.container, drawableResToImageResource(R.drawable.glass_cup_24px))
+    addIdToImageMapping(WaterContainers.BOTTLE.container, drawableResToImageResource(R.drawable.water_bottle_24px))
+    addIdToImageMapping(WaterContainers.LARGE_BOTTLE.container, drawableResToImageResource(R.drawable.water_bottle_large_24px))
     addIdToImageMapping("keyboard", drawableResToImageResource(R.drawable.keyboard_24px))
 }

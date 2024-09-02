@@ -17,10 +17,12 @@ import androidx.wear.tiles.TileService
 import com.hrb116.waterlogged.BuildConfig
 import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.MainTileService
-import com.hrb116.waterlogged.tools.doGetRequest
-import com.hrb116.waterlogged.tools.doPostRequest
-import com.hrb116.waterlogged.tools.putValue
-import com.hrb116.waterlogged.tools.saveWaterUnit
+import com.hrb116.waterlogged.common.networking.doGetRequest
+import com.hrb116.waterlogged.common.networking.doPostRequest
+import com.hrb116.waterlogged.common.preferences.saveUserName
+import com.hrb116.waterlogged.common.tokens.putValue
+import com.hrb116.waterlogged.common.preferences.saveWaterUnit
+import com.hrb116.waterlogged.common.tokens.Tokens as WaterloggedTokens
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -74,7 +76,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
      * the phone. After the user consents on their phone, the wearable app is notified and can
      * continue the authorization process.
      */
-    fun startAuthFlow() {
+    fun startAuthFlow(onCompletion: () -> Unit) {
         viewModelScope.launch {
             val codeVerifier = CodeVerifier()
 
@@ -115,6 +117,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             }
 
             showStatus(R.string.status_retrieved, userName)
+            onCompletion()
         }
     }
 
@@ -182,8 +185,8 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             )
 
             val result = Tokens(
-                responseJson.getString("access_token"),
-                responseJson.getString("refresh_token"),
+                responseJson.getString(WaterloggedTokens.ACCESS_TOKEN.token_name),
+                responseJson.getString(WaterloggedTokens.REFRESH_TOKEN.token_name),
                 LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
             )
 
@@ -202,7 +205,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
      * Using the access token, make an authorized request to the Auth server to retrieve the user's
      * profile.
      */
-    private suspend fun retrieveUserProfile(token: String): Result<String> {
+    suspend fun retrieveUserProfile(token: String): Result<String> {
         return try {
             val responseJson = doGetRequest(
                 url = "https://api.fitbit.com/1/user/-/profile.json",
@@ -210,7 +213,10 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
                     "Authorization" to "Bearer $token"
                 )
             )
-            saveWaterUnitFromProfile(responseJson.getJSONObject("user").getString("waterUnitName"))
+            saveUserInfoProfile(
+                unit = responseJson.getJSONObject("user").getString("waterUnitName"),
+                username = responseJson.getJSONObject("user").getString("displayName")
+            )
             Result.success(responseJson.getJSONObject("user").getString("displayName"))
         } catch (e: CancellationException) {
             throw e
@@ -221,12 +227,13 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun writeTokensToKeystore(tokens: Tokens) {
-        putValue(context, "access_token", tokens.accessToken)
-        putValue(context, "refresh_token", tokens.refreshToken)
-        putValue(context, "expires_at", tokens.expiresAt.toString())
+        putValue(context, WaterloggedTokens.ACCESS_TOKEN, tokens.accessToken)
+        putValue(context, WaterloggedTokens.REFRESH_TOKEN, tokens.refreshToken)
+        putValue(context, WaterloggedTokens.EXPIRES_AT, tokens.expiresAt.toString())
     }
 
-    private fun saveWaterUnitFromProfile(unit: String) {
+    private fun saveUserInfoProfile(unit: String, username: String) {
         saveWaterUnit(context, unit)
+        saveUserName(context, username)
     }
 }

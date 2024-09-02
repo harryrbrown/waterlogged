@@ -1,11 +1,10 @@
-package com.hrb116.waterlogged.presentation.oauth.pkce
-
-// Based on the samples in https://github.com/android/wear-os-samples/tree/main/WearOAuth
+package com.hrb116.waterlogged.presentation.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -16,26 +15,43 @@ import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
-import com.hrb116.waterlogged.R
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
+import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.common.tokens.Tokens
+import com.hrb116.waterlogged.common.tokens.getValue
+import com.hrb116.waterlogged.common.tokens.isTokenExpired
+import com.hrb116.waterlogged.common.tokens.refreshTokens
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
-fun AuthenticateScreen(
-    statusCode: Int,
-    resultMessage: String,
-    startAuthFlow: () -> Unit
+fun ListScreen(
+    onSignedOut: () -> Unit,
+    refetchUserData: suspend (String) -> Result<String>
 ) {
+    val context = LocalContext.current
+    val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
+    val isAuthenticated = accessToken != null
+
+    if (!isAuthenticated) {
+        onSignedOut()
+    }
+
+    if (isTokenExpired(context)) {
+        runBlocking { refreshTokens(context) }
+    }
+
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
             first = ScalingLazyColumnDefaults.ItemType.Text,
-            last = ScalingLazyColumnDefaults.ItemType.Text
+            last = ScalingLazyColumnDefaults.ItemType.Chip
         )
     )
+
     ScreenScaffold(scrollState = columnState, modifier = Modifier.background(Color.Black)) {
         ScalingLazyColumn(columnState = columnState) {
             item {
@@ -48,16 +64,36 @@ fun AuthenticateScreen(
             }
             item {
                 Text(
-                    text = stringResource(R.string.sign_in_fitbit),
+                    text = "Signed in as Harry B.",
                     textAlign = TextAlign.Center
                 )
             }
             item {
                 Chip(
-                    onClick = { startAuthFlow() },
+                    onClick = {
+                        runBlocking {
+                            if (accessToken != null) {
+                                refetchUserData(accessToken)
+                            }
+                        }
+                    },
                     label = {
                         Text(
-                            text = stringResource(R.string.sign_in_on_phone)
+                            text = "Refetch user data"
+                        )
+                    },
+                    icon = {
+                        Icon(painter = painterResource(id = R.drawable.sync_24px), contentDescription = "Send to Phone")
+                    },
+                    colors = ChipDefaults.secondaryChipColors()
+                )
+            }
+            item {
+                Chip(
+                    onClick = { onSignedOut() },
+                    label = {
+                        Text(
+                            text = "Sign out"
                         )
                     },
                     icon = {
@@ -66,8 +102,6 @@ fun AuthenticateScreen(
                     colors = ChipDefaults.secondaryChipColors()
                 )
             }
-            item { Text(stringResource(id = statusCode)) }
-            item { Text(resultMessage) }
         }
     }
 }
@@ -75,21 +109,14 @@ fun AuthenticateScreen(
 @WearPreviewDevices
 @WearPreviewFontScales
 @Composable
-fun AuthenticateScreenPreview() {
-    AuthenticateScreen(
-        statusCode = R.string.status_retrieved,
-        resultMessage = "Bobby Bonson",
-        startAuthFlow = {}
-    )
-}
+fun ListScreenPreview() {
+    val simpleFunction: suspend (String) -> Result<String> = { input ->
+        if (input.isNotEmpty()) {
+            Result.success("Success with input: $input")
+        } else {
+            Result.failure(IllegalArgumentException("Input cannot be empty"))
+        }
+    }
 
-@WearPreviewDevices
-@WearPreviewFontScales
-@Composable
-fun AuthenticateScreenFailedPreview() {
-    AuthenticateScreen(
-        statusCode = R.string.status_failed,
-        resultMessage = "",
-        startAuthFlow = {}
-    )
+    ListScreen({}, simpleFunction)
 }
