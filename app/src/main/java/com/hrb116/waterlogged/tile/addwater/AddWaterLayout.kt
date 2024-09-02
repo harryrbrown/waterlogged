@@ -41,7 +41,7 @@ fun addWaterLayout(context: Context, container: WaterContainers): LayoutElementB
     val contentChip = Chip.Builder(
         context,
         Clickable.Builder()
-            .setId("add_${container}")
+            .setId("add_${container.container}")
             .setOnClick(ActionBuilders.LoadAction.Builder().build())
             .build(),
         buildDeviceParameters(context.resources))
