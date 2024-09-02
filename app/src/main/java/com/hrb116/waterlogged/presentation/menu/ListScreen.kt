@@ -21,6 +21,7 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.common.preferences.getUserName
 import com.hrb116.waterlogged.common.tokens.Tokens
 import com.hrb116.waterlogged.common.tokens.getValue
 import com.hrb116.waterlogged.common.tokens.isTokenExpired
@@ -40,6 +41,8 @@ fun ListScreen(
     if (!isAuthenticated) {
         onSignedOut()
     }
+
+    val name = getUserName(context) ?: ""
 
     if (isTokenExpired(context)) {
         runBlocking { refreshTokens(context) }
@@ -64,7 +67,7 @@ fun ListScreen(
             }
             item {
                 Text(
-                    text = "Signed in as Harry B.",
+                    text = stringResource(R.string.signed_in_as) + " $name",
                     textAlign = TextAlign.Center
                 )
             }
@@ -77,13 +80,9 @@ fun ListScreen(
                             }
                         }
                     },
-                    label = {
-                        Text(
-                            text = "Refetch user data"
-                        )
-                    },
+                    label = { Text(text = stringResource(R.string.refetch_user_data)) },
                     icon = {
-                        Icon(painter = painterResource(id = R.drawable.sync_24px), contentDescription = "Send to Phone")
+                        Icon(painter = painterResource(id = R.drawable.sync_24px), contentDescription = "Refetch user data")
                     },
                     colors = ChipDefaults.secondaryChipColors()
                 )
@@ -91,13 +90,9 @@ fun ListScreen(
             item {
                 Chip(
                     onClick = { onSignedOut() },
-                    label = {
-                        Text(
-                            text = "Sign out"
-                        )
-                    },
+                    label = { Text(text = stringResource(R.string.sign_out)) },
                     icon = {
-                        Icon(painter = painterResource(id = R.drawable.send_to_mobile_24px), contentDescription = "Send to Phone")
+                        Icon(painter = painterResource(id = R.drawable.send_to_mobile_24px), contentDescription = "Sign out")
                     },
                     colors = ChipDefaults.secondaryChipColors()
                 )
