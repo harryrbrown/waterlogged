@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.protolayout.ActionBuilders
+import androidx.wear.protolayout.ColorBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.LayoutElementBuilders.Column
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
@@ -15,6 +16,7 @@ import androidx.wear.protolayout.expression.AnimationParameterBuilders.Animation
 import androidx.wear.protolayout.expression.DynamicBuilders.DynamicFloat
 import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.CircularProgressIndicator
+import androidx.wear.protolayout.material.ProgressIndicatorColors
 import androidx.wear.protolayout.material.layouts.EdgeContentLayout
 import androidx.wear.protolayout.material.layouts.MultiButtonLayout
 import androidx.wear.tooling.preview.devices.WearDevices
@@ -59,22 +61,40 @@ private fun buttonsLayout(context: Context): Column {
 }
 
 private fun circularProgressLayout(progress: Double, cachedProgress: Double?): CircularProgressIndicator {
-    val animationStart = cachedProgress ?: 0.0
+    var animationStart = cachedProgress ?: 0.0
+    var animationEnd = progress
 
-    return CircularProgressIndicator.Builder()
+    val reachedGoal = progress > 1.0
+    while (animationEnd > 1.0) {
+        animationStart -= 1.0
+        animationEnd -= 1.0
+    }
+
+    var builder = CircularProgressIndicator.Builder()
         .setStartAngle(30.0f)
         .setEndAngle(330.0f)
         .setProgress(FloatProp.Builder()
-            .setValue(progress.toFloat())
+            .setValue(animationEnd.toFloat())
             .setDynamicValue(DynamicFloat.animate(
                 animationStart.toFloat(),
-                progress.toFloat(),
+                animationEnd.toFloat(),
                 AnimationSpec.Builder().setAnimationParameters(
-                    AnimationParameters.Builder().setDurationMillis(1000).build()
+                    AnimationParameters.Builder().setDurationMillis(800).build()
                 ).build()
             ))
             .build())
-        .build()
+
+    if (reachedGoal) {
+        builder = builder
+            .setCircularProgressIndicatorColors(
+                ProgressIndicatorColors(
+                    ColorBuilders.argb(0xFFFADFAF.toInt()),
+                    ColorBuilders.argb(0xFFAFCAFA.toInt())
+                )
+            )
+    }
+        
+    return builder.build()
 }
 
 fun waterLayout(context: Context, readFromCache: Boolean = false): LayoutElementBuilders.LayoutElement {
