@@ -21,7 +21,7 @@ Waterlogged is a Wear OS Tile that allows quick and easy recording of your water
 
 ## Installation
 
-Waterlogged is currently in private testing on the Google Play store. To be added to the private testing group, please email me at me@hrb116.uk. Thanks!
+Waterlogged is currently in private testing on the Google Play store. To gain access to private testing, please join the [Waterlogged Google Group](https://groups.google.com/g/waterlogged), and then download from [the Play Store](https://play.google.com/store/apps/details?id=com.hrb116.waterlogged). Thanks!
 
 ## Usage
 
