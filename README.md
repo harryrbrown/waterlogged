@@ -2,7 +2,9 @@
 
 ![screenshot-2024-08-17-21-04-10](https://github.com/user-attachments/assets/cbc37687-f856-4fd1-9c7f-0dbc7d1f1cd2)
 ![screenshot-2024-08-17-21-05-06](https://github.com/user-attachments/assets/b42a7d3c-5395-40f4-a3bd-4e6e0fe1b490)
-![screenshot-2024-09-03-21-08-59](https://github.com/user-attachments/assets/8d1c8784-0a4c-4b4c-8692-409b455df6bd)
+![screenshot-2024-09-15-14-59-19](https://github.com/user-attachments/assets/3ec67227-d43f-44d5-a485-fa47669554fe)
+![screenshot-2024-09-15-14-56-57](https://github.com/user-attachments/assets/9c71db4a-d39c-4b58-b37e-1155c2b33133)
+![screenshot-2024-09-15-14-57-51](https://github.com/user-attachments/assets/8c2fbc1d-1e44-4a79-881b-0a2331ce1db1)
 
 ## Overview
 
@@ -11,7 +13,8 @@ Waterlogged is a Wear OS Tile that allows quick and easy recording of your water
 ## Features
 
 - Authenticates with Fitbit through your paired device (phone), using OAuth 2.0 PKCE
-- Once authenticated, the tile provides three buttons to quickly record your water intake, based upon Fitbit's three default water options - a glass of water (250ml), a bottle of water (500ml), and a large bottle (750ml)
+- Once authenticated, the tile provides three buttons to quickly record your water intake, based upon Fitbit's three default water options - a glass of water (250ml / 8oz), a bottle of water (500ml / 16oz), and a large bottle (750ml / 24oz)
+- The preset water amounts are customisable in the main app
 - Additionally a progress bar around the outside of the tile indicates your progress towards your daily water goal
 
 ## Requirements
