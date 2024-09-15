@@ -46,7 +46,7 @@ private fun loginColumnLayout(context: Context): Column {
                 ActionBuilders.LaunchAction.Builder().setAndroidActivity(
                     AndroidActivity.Builder()
                         .setPackageName("com.hrb116.waterlogged")
-                        .setClassName("com.hrb116.waterlogged.presentation.oauth.pkce.AuthPKCEActivity")
+                        .setClassName("com.hrb116.waterlogged.presentation.MainActivity")
                         .build()
                     ).build())
             .build(),
