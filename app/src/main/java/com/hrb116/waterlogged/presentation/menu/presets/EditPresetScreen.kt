@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
@@ -37,7 +38,7 @@ import com.hrb116.waterlogged.common.tokens.getValue
 fun EditPresetScreen(
     container: String,
     onSignedOut: () -> Unit,
-    onSavedNewValue: () -> Unit
+    navController: NavController
 ) {
     val context = LocalContext.current
     val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
@@ -148,7 +149,7 @@ fun EditPresetScreen(
                     Button(
                         onClick = {
                             saveWaterPreset(context, WaterContainers.valueOf(container), presetValue.toInt())
-                            onSavedNewValue()
+                            navController.popBackStack()
                         },
                         modifier = Modifier.size(ButtonDefaults.ExtraSmallButtonSize),
                         content = { Icon(painter = painterResource(id = R.drawable.check_24px), contentDescription = "Check") },
@@ -179,5 +180,5 @@ private fun backspace(curr: String): String {
 @WearPreviewFontScales
 @Composable
 fun EditPresetScreenPreview() {
-    EditPresetScreen(WaterContainers.GLASS.container, {}, {})
+    EditPresetScreen(WaterContainers.GLASS.container, {}, NavController(LocalContext.current))
 }

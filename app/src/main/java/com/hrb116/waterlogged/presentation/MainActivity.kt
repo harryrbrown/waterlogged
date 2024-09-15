@@ -63,7 +63,7 @@ fun WearApp(pkceViewModel: AuthPKCEViewModel) {
                 EditPresetScreen(
                     container = containerName,
                     onSignedOut = { clearTokens(context); navController.navigate("signin") },
-                    onSavedNewValue = { navController.navigate("presets") }
+                    navController = navController
                 )
             }
         }
