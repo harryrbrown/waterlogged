@@ -29,9 +29,13 @@
     <string name="sign_in_fitbit">Sign in to Fitbit to allow Waterlogged to access your water data.</string>
     <string name="signed_in_as">Signed in as</string>
     <string name="refetch_user_data">Refetch user data</string>
+    <string name="edit_presets">Edit presets</string>
     <string name="waterlogged">Waterlogged</string>
     <string name="waterlogged_allow_access">Allow Waterlogged to access your water data.</string>
     <string name="add_water">Add water</string>
     <string name="add">Add</string>
     <string name="back">Back</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
 </resources>

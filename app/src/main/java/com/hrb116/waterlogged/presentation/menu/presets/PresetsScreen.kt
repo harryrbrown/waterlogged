@@ -1,4 +1,4 @@
-package com.hrb116.waterlogged.presentation.menu
+package com.hrb116.waterlogged.presentation.menu.presets
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
@@ -21,20 +21,16 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.hrb116.waterlogged.R
-import com.hrb116.waterlogged.common.preferences.clearWaterPresets
-import com.hrb116.waterlogged.common.preferences.getUserName
+import com.hrb116.waterlogged.common.WaterContainers
+import com.hrb116.waterlogged.common.preferences.getLocalisedWaterVolume
 import com.hrb116.waterlogged.common.tokens.Tokens
 import com.hrb116.waterlogged.common.tokens.getValue
-import com.hrb116.waterlogged.common.tokens.isTokenExpired
-import com.hrb116.waterlogged.common.tokens.refreshTokens
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
-fun ListScreen(
+fun PresetsScreen(
     onSignedOut: () -> Unit,
-    onPresets: () -> Unit,
-    refetchUserData: suspend (String) -> Result<String>
+    onEdit: (WaterContainers) -> Unit
 ) {
     val context = LocalContext.current
     val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
@@ -44,12 +40,6 @@ fun ListScreen(
         onSignedOut()
     }
 
-    val name = getUserName(context) ?: ""
-
-    if (isTokenExpired(context)) {
-        runBlocking { refreshTokens(context) }
-    }
-
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
             first = ScalingLazyColumnDefaults.ItemType.Text,
@@ -57,55 +47,49 @@ fun ListScreen(
         )
     )
 
+    val smallAmount = getLocalisedWaterVolume(context, WaterContainers.GLASS);
+    val mediumAmount = getLocalisedWaterVolume(context, WaterContainers.BOTTLE);
+    val largeAmount = getLocalisedWaterVolume(context, WaterContainers.LARGE_BOTTLE);
+
     ScreenScaffold(scrollState = columnState, modifier = Modifier.background(Color.Black)) {
         ScalingLazyColumn(columnState = columnState) {
             item {
                 ListHeader {
                     Text(
-                        stringResource(R.string.waterlogged),
+                        stringResource(R.string.edit_presets),
                         textAlign = TextAlign.Center
                     )
                 }
             }
             item {
-                Text(
-                    text = stringResource(R.string.signed_in_as) + " $name",
-                    textAlign = TextAlign.Center
-                )
-            }
-            item {
                 Chip(
-                    onClick = { onPresets() },
-                    label = { Text(text = stringResource(R.string.edit_presets)) },
+                    onClick = { onEdit(WaterContainers.GLASS) },
+                    label = { Text(text = stringResource(R.string.small)) },
+                    secondaryLabel = { Text(text = smallAmount)},
                     icon = {
-                        Icon(painter = painterResource(id = R.drawable.edit_24px), contentDescription = "Refetch user data")
+                        Icon(painter = painterResource(id = R.drawable.glass_cup_24px), contentDescription = "Small water container")
                     },
                     colors = ChipDefaults.secondaryChipColors()
                 )
             }
             item {
                 Chip(
-                    onClick = {
-                        runBlocking {
-                            if (accessToken != null) {
-                                refetchUserData(accessToken)
-                            }
-                        }
-                        clearWaterPresets(context)
-                    },
-                    label = { Text(text = stringResource(R.string.refetch_user_data)) },
+                    onClick = { onEdit(WaterContainers.BOTTLE) },
+                    label = { Text(text = stringResource(R.string.medium)) },
+                    secondaryLabel = { Text(text = mediumAmount)},
                     icon = {
-                        Icon(painter = painterResource(id = R.drawable.sync_24px), contentDescription = "Refetch user data")
+                        Icon(painter = painterResource(id = R.drawable.water_bottle_24px), contentDescription = "Medium water container")
                     },
                     colors = ChipDefaults.secondaryChipColors()
                 )
             }
             item {
                 Chip(
-                    onClick = { onSignedOut() },
-                    label = { Text(text = stringResource(R.string.sign_out)) },
+                    onClick = { onEdit(WaterContainers.LARGE_BOTTLE) },
+                    label = { Text(text = stringResource(R.string.large)) },
+                    secondaryLabel = { Text(text = largeAmount)},
                     icon = {
-                        Icon(painter = painterResource(id = R.drawable.send_to_mobile_24px), contentDescription = "Sign out")
+                        Icon(painter = painterResource(id = R.drawable.water_bottle_large_24px), contentDescription = "Large water container")
                     },
                     colors = ChipDefaults.secondaryChipColors()
                 )
@@ -117,14 +101,6 @@ fun ListScreen(
 @WearPreviewDevices
 @WearPreviewFontScales
 @Composable
-fun ListScreenPreview() {
-    val simpleFunction: suspend (String) -> Result<String> = { input ->
-        if (input.isNotEmpty()) {
-            Result.success("Success with input: $input")
-        } else {
-            Result.failure(IllegalArgumentException("Input cannot be empty"))
-        }
-    }
-
-    ListScreen({}, {}, simpleFunction)
+fun PresetsScreenPreview() {
+    PresetsScreen({}, {})
 }

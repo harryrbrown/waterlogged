@@ -15,6 +15,8 @@ import com.hrb116.waterlogged.common.tokens.clearTokens
 import com.hrb116.waterlogged.presentation.oauth.pkce.AuthPKCEViewModel
 import com.hrb116.waterlogged.presentation.oauth.pkce.AuthenticateScreen
 import com.hrb116.waterlogged.presentation.menu.ListScreen
+import com.hrb116.waterlogged.presentation.menu.presets.EditPresetScreen
+import com.hrb116.waterlogged.presentation.menu.presets.PresetsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +46,24 @@ fun WearApp(pkceViewModel: AuthPKCEViewModel) {
             composable("menu") {
                 ListScreen(
                     onSignedOut = { clearTokens(context); navController.navigate("signin") },
+                    onPresets = { navController.navigate("presets") },
                     refetchUserData = pkceViewModel::retrieveUserProfile
+                )
+            }
+            composable("presets") {
+                PresetsScreen(
+                    onSignedOut = { clearTokens(context); navController.navigate("signin") },
+                    onEdit = { containerName ->
+                        navController.navigate("edit_presets/${containerName.name}")
+                    }
+                )
+            }
+            composable("edit_presets/{containerName}") {backStackEntry ->
+                val containerName = backStackEntry.arguments?.getString("containerName") ?: "0"
+                EditPresetScreen(
+                    container = containerName,
+                    onSignedOut = { clearTokens(context); navController.navigate("signin") },
+                    navController = navController
                 )
             }
         }
