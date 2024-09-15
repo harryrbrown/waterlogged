@@ -26,13 +26,18 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.common.WaterContainers
+import com.hrb116.waterlogged.common.preferences.getWaterUnit
+import com.hrb116.waterlogged.common.preferences.saveWaterPreset
 import com.hrb116.waterlogged.common.tokens.Tokens
 import com.hrb116.waterlogged.common.tokens.getValue
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun EditPresetScreen(
+    container: String,
     onSignedOut: () -> Unit,
+    onSavedNewValue: () -> Unit
 ) {
     val context = LocalContext.current
     val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
@@ -50,16 +55,15 @@ fun EditPresetScreen(
     )
 
     var presetValue by remember { mutableStateOf("0") }
+    val unit = getWaterUnit(context)
 
     ScreenScaffold(scrollState = columnState, modifier = Modifier.background(Color.Black)) {
         ScalingLazyColumn(columnState = columnState) {
             item {
-//                ListHeader {
                     Text(
-                        presetValue,
+                        "$presetValue $unit",
                         textAlign = TextAlign.Center
                     )
-//                }
             }
             item {
                 Row {
@@ -142,30 +146,21 @@ fun EditPresetScreen(
                         colors = ButtonDefaults.outlinedButtonColors()
                     )
                     Button(
-                        onClick = {},
+                        onClick = {
+                            saveWaterPreset(context, WaterContainers.valueOf(container), presetValue.toInt())
+                            onSavedNewValue()
+                        },
                         modifier = Modifier.size(ButtonDefaults.ExtraSmallButtonSize),
                         content = { Icon(painter = painterResource(id = R.drawable.check_24px), contentDescription = "Check") },
                         colors = ButtonDefaults.outlinedButtonColors()
                     )
                 }
             }
-//            item {
-//                Chip(
-//                    onClick = {},
-//                    label = { Text(text = stringResource(R.string.large)) },
-//                    secondaryLabel = { Text(text = largeAmount)},
-//                    icon = {
-//                        Icon(painter = painterResource(id = R.drawable.water_bottle_large_24px), contentDescription = "Large water container")
-//                    },
-//                    colors = ChipDefaults.secondaryChipColors()
-//                )
-//            }
         }
     }
 }
 
 private fun updateValue(curr: String, newChar: Char): String {
-//    if (newChar == '0' && curr == "0") return curr
     return when (curr) {
         "0" -> newChar.toString()
         else -> curr + newChar
@@ -173,10 +168,10 @@ private fun updateValue(curr: String, newChar: Char): String {
 }
 
 private fun backspace(curr: String): String {
-    if (curr.length == 1) {
-        return "0"
+    return if (curr.length == 1) {
+        "0"
     } else {
-        return curr.dropLast(1)
+        curr.dropLast(1)
     }
 }
 
@@ -184,5 +179,5 @@ private fun backspace(curr: String): String {
 @WearPreviewFontScales
 @Composable
 fun EditPresetScreenPreview() {
-    EditPresetScreen({})
+    EditPresetScreen(WaterContainers.GLASS.container, {}, {})
 }

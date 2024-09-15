@@ -30,7 +30,7 @@ import com.hrb116.waterlogged.common.tokens.getValue
 @Composable
 fun PresetsScreen(
     onSignedOut: () -> Unit,
-    onEdit: () -> Unit
+    onEdit: (WaterContainers) -> Unit
 ) {
     val context = LocalContext.current
     val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
@@ -63,7 +63,7 @@ fun PresetsScreen(
             }
             item {
                 Chip(
-                    onClick = { onEdit() },
+                    onClick = { onEdit(WaterContainers.GLASS) },
                     label = { Text(text = stringResource(R.string.small)) },
                     secondaryLabel = { Text(text = smallAmount)},
                     icon = {
@@ -74,7 +74,7 @@ fun PresetsScreen(
             }
             item {
                 Chip(
-                    onClick = {},
+                    onClick = { onEdit(WaterContainers.BOTTLE) },
                     label = { Text(text = stringResource(R.string.medium)) },
                     secondaryLabel = { Text(text = mediumAmount)},
                     icon = {
@@ -85,7 +85,7 @@ fun PresetsScreen(
             }
             item {
                 Chip(
-                    onClick = {},
+                    onClick = { onEdit(WaterContainers.LARGE_BOTTLE) },
                     label = { Text(text = stringResource(R.string.large)) },
                     secondaryLabel = { Text(text = largeAmount)},
                     icon = {

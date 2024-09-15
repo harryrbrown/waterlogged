@@ -32,6 +32,7 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun ListScreen(
     onSignedOut: () -> Unit,
+    onPresets: () -> Unit,
     refetchUserData: suspend (String) -> Result<String>
 ) {
     val context = LocalContext.current
@@ -69,6 +70,16 @@ fun ListScreen(
                 Text(
                     text = stringResource(R.string.signed_in_as) + " $name",
                     textAlign = TextAlign.Center
+                )
+            }
+            item {
+                Chip(
+                    onClick = { onPresets() },
+                    label = { Text(text = stringResource(R.string.edit_presets)) },
+                    icon = {
+                        Icon(painter = painterResource(id = R.drawable.edit_24px), contentDescription = "Refetch user data")
+                    },
+                    colors = ChipDefaults.secondaryChipColors()
                 )
             }
             item {
@@ -113,5 +124,5 @@ fun ListScreenPreview() {
         }
     }
 
-    ListScreen({}, simpleFunction)
+    ListScreen({}, {}, simpleFunction)
 }
