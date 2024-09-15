@@ -1,14 +1,7 @@
 package com.hrb116.waterlogged.common.preferences
 
 import android.content.Context
-import android.util.Log
 import com.hrb116.waterlogged.common.WaterContainers
-import com.hrb116.waterlogged.common.networking.doGetRequest
-import com.hrb116.waterlogged.common.tokens.Tokens
-import com.hrb116.waterlogged.common.tokens.getValue
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlinx.coroutines.CancellationException
 
 data class WaterLog(
     val water: Double = 0.0,
@@ -92,4 +85,11 @@ fun saveWaterPreset(context: Context, container: WaterContainers, amount: Int) {
         WaterContainers.BOTTLE -> sharedPreferences.edit().putInt(Preferences.WATER_AMOUNT_2.key, amount).apply()
         WaterContainers.LARGE_BOTTLE -> sharedPreferences.edit().putInt(Preferences.WATER_AMOUNT_3.key, amount).apply()
     }
+}
+
+fun clearWaterPresets(context: Context) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    sharedPreferences.edit().remove(Preferences.WATER_AMOUNT_1.key).apply()
+    sharedPreferences.edit().remove(Preferences.WATER_AMOUNT_2.key).apply()
+    sharedPreferences.edit().remove(Preferences.WATER_AMOUNT_3.key).apply()
 }

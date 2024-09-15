@@ -21,6 +21,7 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.hrb116.waterlogged.R
+import com.hrb116.waterlogged.common.preferences.clearWaterPresets
 import com.hrb116.waterlogged.common.preferences.getUserName
 import com.hrb116.waterlogged.common.tokens.Tokens
 import com.hrb116.waterlogged.common.tokens.getValue
@@ -90,6 +91,7 @@ fun ListScreen(
                                 refetchUserData(accessToken)
                             }
                         }
+                        clearWaterPresets(context)
                     },
                     label = { Text(text = stringResource(R.string.refetch_user_data)) },
                     icon = {
