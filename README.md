@@ -33,8 +33,10 @@ Download from [the Google Play Store](https://play.google.com/store/apps/details
 
 ## Usage
 
-1. After installing, go to the Watch app on your smartphone. Open "Tiles", tap "Add Tiles", and find Waterlogged's "Quick add water" tile.
+1. After installing, go to the Watch app on your smartphone. Open "Tiles", tap "Add Tiles", and find Waterlogged's "Quick add water" tile. 
+
 [<img src="https://github.com/user-attachments/assets/a73d7abf-e290-4f62-8386-34ce4912f9fc" width="500px">](https://github.com/user-attachments/assets/a73d7abf-e290-4f62-8386-34ce4912f9fc)
+
 2. Swipe on your watch to locate your new tile. The first time using the tile, you'll need to authenticate with Fitbit. Follow the steps on the watch and, when prompted, open your phone to complete the web sign-in.
 3. After successful authentication, the tile should now present to you the three buttons for quick recording water. You're ready to go!
 
