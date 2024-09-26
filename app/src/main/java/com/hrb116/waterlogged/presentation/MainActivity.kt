@@ -1,5 +1,6 @@
 package com.hrb116.waterlogged.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
@@ -40,19 +42,19 @@ fun WearApp(pkceViewModel: AuthPKCEViewModel) {
                 AuthenticateScreen(
                     uiState.value.statusCode,
                     uiState.value.resultMessage,
-                    { (pkceViewModel::startAuthFlow){ navController.navigate("menu") } },
+                    { (pkceViewModel::startAuthFlow){ signIn(navController) } },
                 )
             }
             composable("menu") {
                 ListScreen(
-                    onSignedOut = { clearTokens(context); navController.navigate("signin") },
+                    onSignedOut = { signOut(navController, context) },
                     onPresets = { navController.navigate("presets") },
                     refetchUserData = pkceViewModel::retrieveUserProfile
                 )
             }
             composable("presets") {
                 PresetsScreen(
-                    onSignedOut = { clearTokens(context); navController.navigate("signin") },
+                    onSignedOut = { signOut(navController, context) },
                     onEdit = { containerName ->
                         navController.navigate("edit_presets/${containerName.name}")
                     }
@@ -62,10 +64,23 @@ fun WearApp(pkceViewModel: AuthPKCEViewModel) {
                 val containerName = backStackEntry.arguments?.getString("containerName") ?: "0"
                 EditPresetScreen(
                     container = containerName,
-                    onSignedOut = { clearTokens(context); navController.navigate("signin") },
+                    onSignedOut = { signOut(navController, context) },
                     navController = navController
                 )
             }
         }
+    }
+}
+
+private fun signIn(navController: NavController) {
+    navController.navigate("menu") {
+        popUpTo(0)
+    }
+}
+
+private fun signOut(navController: NavController, context: Context) {
+    clearTokens(context)
+    navController.navigate("signin") {
+        popUpTo(0)
     }
 }
