@@ -39,6 +39,8 @@ Download from [the Google Play Store](https://play.google.com/store/apps/details
 
 2. Swipe on your watch to locate your new tile. The first time using the tile, you'll need to authenticate with Fitbit. Follow the steps on the watch and, when prompted, open your phone to complete the web sign-in.
 3. After successful authentication, the tile should now present to you the three buttons for quick recording water. You're ready to go!
+4. To edit the preset values, open the **app** on your watch (not the tile) and tap "Edit presets".
+5. If you change between oz and ml on your Fitbit account, you'll need to resync the user data to have this reflected in the tile. Open the **app** on your watch (not the tile) and tap "Refetch user data" (note that this will clear your presets).
 
 ## Privacy and security
 
