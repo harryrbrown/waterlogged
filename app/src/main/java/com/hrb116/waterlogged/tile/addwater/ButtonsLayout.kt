@@ -71,8 +71,8 @@ private fun circularProgressLayout(progress: Double, cachedProgress: Double?): C
     }
 
     var builder = CircularProgressIndicator.Builder()
-        .setStartAngle(30.0f)
-        .setEndAngle(330.0f)
+        .setStartAngle(-150.0f)
+        .setEndAngle(150.0f)
         .setProgress(FloatProp.Builder()
             .setValue(animationEnd.toFloat())
             .setDynamicValue(DynamicFloat.animate(

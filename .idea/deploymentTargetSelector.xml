@@ -7,10 +7,10 @@
       </SelectionState>
       <SelectionState runConfigName="waterlogged">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-18T01:03:53.233429Z">
+        <DropdownSelection timestamp="2025-01-05T22:58:33.651640Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=38081RTJWW3WKR" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/harry/.android/avd/Wear_OS_Small_Round_API_33.avd" />
             </handle>
           </Target>
         </DropdownSelection>
