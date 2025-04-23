@@ -13,7 +13,7 @@ plugins {
 
 android {
     namespace = "com.hrb116.waterlogged"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.hrb116.waterlogged"
