@@ -33,7 +33,8 @@ suspend fun postWater(context: Context, container: WaterContainers) {
             ),
             requestHeaders = mapOf(
                 "Authorization" to "Bearer $token"
-            )
+            ),
+            sendAsQuery = true
         )
 
         Log.d(TAG, responseJson.toString())
