@@ -1,24 +1,20 @@
 [versions]
-agp = "8.7.3"
+agp = "8.9.2"
 kotlin = "1.9.0"
 playServicesWearable = "19.0.0"
-composeBom = "2024.12.01"
-composeMaterial = "1.4.0"
-composeFoundation = "1.4.0"
-activityCompose = "1.9.3"
+composeBom = "2025.04.00"
+composeMaterial = "1.4.1"
+composeFoundation = "1.4.1"
+activityCompose = "1.10.1"
 coreSplashscreen = "1.0.1"
-tiles = "1.1.0"
-tilesMaterial = "1.1.0"
 horologistComposeTools = "0.6.22"
 horologistTiles = "0.6.22"
 watchfaceComplicationsDataSourceKtx = "1.2.1"
-tilesRenderer = "1.4.0-alpha05"
 wearToolingPreview = "1.0.0"
 tilesToolingPreview = "1.4.1"
 horologistComposeLayout = "0.6.22"
 wearRemoteInteractions = "1.1.0"
-wearPhoneInteractions = "1.0.1"
-wearInput = "1.2.0-alpha02"
+wearPhoneInteractions = "1.1.0"
 
 [libraries]
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
@@ -43,7 +39,6 @@ tiles-tooling-preview = { group = "androidx.wear.tiles", name = "tiles-tooling-p
 horologist-compose-layout = { group = "com.google.android.horologist", name = "horologist-compose-layout", version.ref = "horologistComposeLayout" }
 wear-remote-interactions = { group = "androidx.wear", name = "wear-remote-interactions", version.ref = "wearRemoteInteractions" }
 wear-phone-interactions = { group = "androidx.wear", name = "wear-phone-interactions", version.ref = "wearPhoneInteractions" }
-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

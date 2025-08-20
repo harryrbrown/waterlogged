@@ -19,35 +19,47 @@ suspend fun doPostRequest(
     url: String,
     params: Map<String, String>,
     requestHeaders: Map<String, String>? = null,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    sendAsQuery: Boolean = false
 ): JSONObject {
     return withContext(dispatcher) {
-        val conn = (URL(url).openConnection() as HttpURLConnection)
-        val postData = StringBuilder()
-        for ((key, value) in params) {
-            if (postData.isNotEmpty()) postData.append('&')
-            postData.append(URLEncoder.encode(key, "UTF-8"))
-            postData.append('=')
-            postData.append(URLEncoder.encode(value, "UTF-8"))
+        // Build URL or body based on mode
+        val encodedParams = params.entries.joinToString("&") {
+            "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
         }
-        val postDataBytes = postData.toString().toByteArray(charset("UTF-8"))
+        val requestUrl = if (sendAsQuery && encodedParams.isNotEmpty()) {
+            if (url.contains("?")) "$url&$encodedParams" else "$url?$encodedParams"
+        } else {
+            url
+        }
 
-        requestHeaders?.onEach { (key, value) ->
+        val conn = (URL(requestUrl).openConnection() as HttpURLConnection)
+
+        // Apply headers (auth, etc.)
+        requestHeaders?.forEach { (key, value) ->
             conn.setRequestProperty(key, value)
         }
 
-        conn.apply {
-            requestMethod = "POST"
-            setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-            setRequestProperty("Content-Length", postDataBytes.size.toString())
-            doOutput = true
-            outputStream.write(postDataBytes)
+        conn.requestMethod = "POST"
+        conn.doInput = true
+
+        if (!sendAsQuery) {
+            val postDataBytes = encodedParams.toByteArray(Charsets.UTF_8)
+            conn.doOutput = true
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+            conn.setRequestProperty("Content-Length", postDataBytes.size.toString())
+            conn.outputStream.use { it.write(postDataBytes) }
         }
 
-        val inputReader = BufferedReader(InputStreamReader(conn.inputStream, "UTF-8"))
-        val response = inputReader.readText()
+        val responseCode = conn.responseCode
+        val inputStream = if (responseCode in 200..299) {
+            conn.inputStream
+        } else {
+            conn.errorStream ?: conn.inputStream
+        }
 
-        Log.d("PostRequestUtil", "Response: $response")
+        val response = inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+        Log.d("PostRequestUtil", "HTTP $responseCode: $response")
 
         JSONObject(response)
     }
