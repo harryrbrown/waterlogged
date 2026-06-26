@@ -42,13 +42,17 @@ suspend fun refreshTokens(context: Context): Boolean {
             url = "https://oauth2.googleapis.com/token",
             params = mapOf(
                 "client_id" to CLIENT_ID,
+                "client_secret" to BuildConfig.CLIENT_SECRET,
                 "grant_type" to "refresh_token",
                 "refresh_token" to refreshToken
             )
         )
 
         putValue(context, Tokens.ACCESS_TOKEN, responseJson.getString("access_token"))
-        putValue(context, Tokens.REFRESH_TOKEN, responseJson.getString("refresh_token"))
+        val newRefreshToken = responseJson.optString("refresh_token")
+        if (newRefreshToken.isNotEmpty()) {
+            putValue(context, Tokens.REFRESH_TOKEN, newRefreshToken)
+        }
         putValue(
             context,
             Tokens.EXPIRES_AT, LocalDateTime.now()

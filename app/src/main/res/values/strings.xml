@@ -26,7 +26,7 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_in_on_phone">Sign in on phone</string>
-    <string name="sign_in_fitbit">Sign in with Google to allow Waterlogged to access your water data.</string>
+    <string name="sign_in_google">Sign in with Google to allow Waterlogged to access your water data.</string>
     <string name="signed_in_as">Signed in as</string>
     <string name="refetch_user_data">Refetch user data</string>
     <string name="edit_presets">Edit presets</string>
