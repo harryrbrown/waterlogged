@@ -37,6 +37,8 @@ private const val TAG = "WearOAuthViewModel"
 
 private const val CLIENT_ID = BuildConfig.CLIENT_ID
 private const val CLIENT_SECRET = BuildConfig.CLIENT_SECRET
+private const val GOOGLE_HEALTH_SETTINGS_URL = "https://health.googleapis.com/v4/users/me/settings"
+private const val GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
 data class ProofKeyCodeExchangeState(
     // Status to show on the Wear OS display
@@ -80,15 +82,20 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             val codeVerifier = CodeVerifier()
 
-            // We have to build this Uri, replace the encoded '+' characters, and then parse the
-            // Uri again, otherwise the wrong webpage will open
-            val uri = Uri.Builder()
-                .encodedPath("https://www.fitbit.com/oauth2/authorize")
-                .appendQueryParameter("scope", "nutrition+profile")
+            val scopes = listOf(
+                "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+                "https://www.googleapis.com/auth/googlehealth.nutrition.readonly",
+                "https://www.googleapis.com/auth/googlehealth.settings.readonly",
+                "https://www.googleapis.com/auth/userinfo.profile"
+            ).joinToString(" ")
+            val finalUri = Uri.Builder()
+                .scheme("https")
+                .authority("accounts.google.com")
+                .path("/o/oauth2/v2/auth")
+                .appendQueryParameter("scope", scopes)
+                .appendQueryParameter("access_type", "offline")
+                .appendQueryParameter("prompt", "consent")
                 .build()
-                .toString()
-                .replace("%2B", "+")
-            val finalUri = Uri.parse(uri)
             val oauthRequest = OAuthRequest.Builder(context)
                 .setAuthProviderUrl(finalUri)
                 .setCodeChallenge(CodeChallenge(codeVerifier))
@@ -173,7 +180,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
             Log.d(TAG, "Requesting token...")
 
             val responseJson = doPostRequest(
-                url = "https://api.fitbit.com/oauth2/token",
+                url = "https://oauth2.googleapis.com/token",
                 params = mapOf(
                     "client_id" to CLIENT_ID,
                     "client_secret" to CLIENT_SECRET,
@@ -186,7 +193,7 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
 
             val result = Tokens(
                 responseJson.getString(WaterloggedTokens.ACCESS_TOKEN.token_name),
-                responseJson.getString(WaterloggedTokens.REFRESH_TOKEN.token_name),
+                responseJson.optString(WaterloggedTokens.REFRESH_TOKEN.token_name, ""),
                 LocalDateTime.now().plusSeconds(responseJson.getLong("expires_in"))
             )
 
@@ -202,22 +209,26 @@ class AuthPKCEViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * Using the access token, make an authorized request to the Auth server to retrieve the user's
-     * profile.
+     * Using the access token, fetch the user's display name and water unit preference from
+     * Google's userinfo and Google Health settings endpoints.
      */
     suspend fun retrieveUserProfile(token: String): Result<String> {
         return try {
-            val responseJson = doGetRequest(
-                url = "https://api.fitbit.com/1/user/-/profile.json",
-                requestHeaders = mapOf(
-                    "Authorization" to "Bearer $token"
-                )
-            )
-            saveUserInfoProfile(
-                unit = responseJson.getJSONObject("user").getString("waterUnitName"),
-                username = responseJson.getJSONObject("user").getString("displayName")
-            )
-            Result.success(responseJson.getJSONObject("user").getString("displayName"))
+            val headers = mapOf("Authorization" to "Bearer $token")
+
+            val userInfoJson = doGetRequest(url = GOOGLE_USERINFO_URL, requestHeaders = headers)
+            val displayName = userInfoJson.getString("name")
+
+            val settingsJson = doGetRequest(url = GOOGLE_HEALTH_SETTINGS_URL, requestHeaders = headers)
+            val waterUnitEnum = settingsJson.optString("waterUnit", "MILLILITERS")
+            val waterUnit = when {
+                waterUnitEnum.contains("FLUID_OUNCE") || waterUnitEnum.contains("FLUID_OUNCES") -> "fl oz"
+                waterUnitEnum.contains("CUP") || waterUnitEnum.contains("CUPS") -> "cup"
+                else -> "ml"
+            }
+
+            saveUserInfoProfile(unit = waterUnit, username = displayName)
+            Result.success(displayName)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

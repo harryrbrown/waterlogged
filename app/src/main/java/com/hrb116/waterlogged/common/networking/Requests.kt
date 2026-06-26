@@ -65,6 +65,34 @@ suspend fun doPostRequest(
     }
 }
 
+suspend fun doPostJsonRequest(
+    url: String,
+    body: JSONObject,
+    requestHeaders: Map<String, String>,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+): JSONObject {
+    return withContext(dispatcher) {
+        val conn = (URL(url).openConnection() as HttpURLConnection)
+        requestHeaders.forEach { (key, value) -> conn.setRequestProperty(key, value) }
+        conn.requestMethod = "POST"
+        conn.doInput = true
+        conn.doOutput = true
+        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+        val bodyBytes = body.toString().toByteArray(Charsets.UTF_8)
+        conn.outputStream.use { it.write(bodyBytes) }
+
+        val responseCode = conn.responseCode
+        val inputStream = if (responseCode in 200..299) {
+            conn.inputStream
+        } else {
+            conn.errorStream ?: conn.inputStream
+        }
+        val response = inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+        Log.d("PostJsonRequest", "HTTP $responseCode: $response")
+        JSONObject(response)
+    }
+}
+
 suspend fun doGetRequest(
     url: String,
     requestHeaders: Map<String, String>,

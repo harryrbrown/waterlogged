@@ -25,8 +25,23 @@ fun getWaterFromCache(context: Context): WaterLog? {
 fun writeWaterToCache(context: Context, waterLog: WaterLog) {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     sharedPreferences.edit().putFloat(Preferences.WATER.key, waterLog.water.toFloat()).apply()
-    sharedPreferences.edit().putFloat(Preferences.WATER_GOAL.key, waterLog.waterGoal.toFloat()).apply()
     sharedPreferences.edit().putFloat(Preferences.WATER_GOAL_PROGRESS.key, waterLog.waterGoalProgress.toFloat()).apply()
+}
+
+fun getWaterGoal(context: Context): Double {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    val unit = getWaterUnit(context) ?: "ml"
+    val default = when (unit) {
+        "fl oz" -> 67.0
+        "cup" -> 8.0
+        else -> 2000.0
+    }
+    return sharedPreferences.getFloat(Preferences.WATER_GOAL.key, default.toFloat()).toDouble()
+}
+
+fun saveWaterGoal(context: Context, amount: Int) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    sharedPreferences.edit().putFloat(Preferences.WATER_GOAL.key, amount.toFloat()).apply()
 }
 
 fun getWaterUnit(context: Context): String? {

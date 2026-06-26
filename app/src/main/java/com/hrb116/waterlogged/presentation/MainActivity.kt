@@ -23,10 +23,18 @@ import com.hrb116.waterlogged.presentation.menu.presets.PresetsScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        migrateToGoogleHealth(this)
         setContent {
             WearApp(pkceViewModel = viewModel())
         }
+    }
+}
+
+private fun migrateToGoogleHealth(context: Context) {
+    val prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    if (!prefs.getBoolean("migrated_to_google_health", false)) {
+        clearTokens(context)
+        prefs.edit().putBoolean("migrated_to_google_health", true).apply()
     }
 }
 
@@ -56,7 +64,7 @@ fun WearApp(pkceViewModel: AuthPKCEViewModel) {
                 PresetsScreen(
                     onSignedOut = { signOut(navController, context) },
                     onEdit = { containerName ->
-                        navController.navigate("edit_presets/${containerName.name}")
+                        navController.navigate("edit_presets/$containerName")
                     }
                 )
             }

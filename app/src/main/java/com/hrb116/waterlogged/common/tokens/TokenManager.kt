@@ -39,7 +39,7 @@ suspend fun refreshTokens(context: Context): Boolean {
         val refreshToken = getValue(context, Tokens.REFRESH_TOKEN) ?: return false
 
         val responseJson = doPostRequest(
-            url = "https://api.fitbit.com/oauth2/token",
+            url = "https://oauth2.googleapis.com/token",
             params = mapOf(
                 "client_id" to CLIENT_ID,
                 "grant_type" to "refresh_token",
