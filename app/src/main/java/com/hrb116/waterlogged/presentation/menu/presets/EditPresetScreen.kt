@@ -29,6 +29,7 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnStat
 import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.common.WaterContainers
 import com.hrb116.waterlogged.common.preferences.getWaterUnit
+import com.hrb116.waterlogged.common.preferences.saveWaterGoal
 import com.hrb116.waterlogged.common.preferences.saveWaterPreset
 import com.hrb116.waterlogged.common.tokens.Tokens
 import com.hrb116.waterlogged.common.tokens.getValue
@@ -148,7 +149,11 @@ fun EditPresetScreen(
                     )
                     Button(
                         onClick = {
-                            saveWaterPreset(context, WaterContainers.valueOf(container), presetValue.toInt())
+                            if (container == "GOAL") {
+                                saveWaterGoal(context, presetValue.toInt())
+                            } else {
+                                saveWaterPreset(context, WaterContainers.valueOf(container), presetValue.toInt())
+                            }
                             navController.popBackStack()
                         },
                         modifier = Modifier.size(ButtonDefaults.ExtraSmallButtonSize),

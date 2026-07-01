@@ -48,7 +48,7 @@ fun AuthenticateScreen(
             }
             item {
                 Text(
-                    text = stringResource(R.string.sign_in_fitbit),
+                    text = stringResource(R.string.sign_in_google),
                     textAlign = TextAlign.Center
                 )
             }

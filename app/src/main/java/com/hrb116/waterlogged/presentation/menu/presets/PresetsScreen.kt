@@ -23,6 +23,8 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnStat
 import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.common.WaterContainers
 import com.hrb116.waterlogged.common.preferences.getLocalisedWaterVolume
+import com.hrb116.waterlogged.common.preferences.getWaterGoal
+import com.hrb116.waterlogged.common.preferences.getWaterUnit
 import com.hrb116.waterlogged.common.tokens.Tokens
 import com.hrb116.waterlogged.common.tokens.getValue
 
@@ -30,7 +32,7 @@ import com.hrb116.waterlogged.common.tokens.getValue
 @Composable
 fun PresetsScreen(
     onSignedOut: () -> Unit,
-    onEdit: (WaterContainers) -> Unit
+    onEdit: (String) -> Unit
 ) {
     val context = LocalContext.current
     val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
@@ -47,9 +49,11 @@ fun PresetsScreen(
         )
     )
 
-    val smallAmount = getLocalisedWaterVolume(context, WaterContainers.GLASS);
-    val mediumAmount = getLocalisedWaterVolume(context, WaterContainers.BOTTLE);
-    val largeAmount = getLocalisedWaterVolume(context, WaterContainers.LARGE_BOTTLE);
+    val smallAmount = getLocalisedWaterVolume(context, WaterContainers.GLASS)
+    val mediumAmount = getLocalisedWaterVolume(context, WaterContainers.BOTTLE)
+    val largeAmount = getLocalisedWaterVolume(context, WaterContainers.LARGE_BOTTLE)
+    val unit = if (getWaterUnit(context) == "fl oz") "oz" else (getWaterUnit(context) ?: "ml")
+    val goalAmount = "${getWaterGoal(context).toInt()} $unit"
 
     ScreenScaffold(scrollState = columnState, modifier = Modifier.background(Color.Black)) {
         ScalingLazyColumn(columnState = columnState) {
@@ -63,7 +67,7 @@ fun PresetsScreen(
             }
             item {
                 Chip(
-                    onClick = { onEdit(WaterContainers.GLASS) },
+                    onClick = { onEdit(WaterContainers.GLASS.name) },
                     label = { Text(text = stringResource(R.string.small)) },
                     secondaryLabel = { Text(text = smallAmount)},
                     icon = {
@@ -74,7 +78,7 @@ fun PresetsScreen(
             }
             item {
                 Chip(
-                    onClick = { onEdit(WaterContainers.BOTTLE) },
+                    onClick = { onEdit(WaterContainers.BOTTLE.name) },
                     label = { Text(text = stringResource(R.string.medium)) },
                     secondaryLabel = { Text(text = mediumAmount)},
                     icon = {
@@ -85,11 +89,22 @@ fun PresetsScreen(
             }
             item {
                 Chip(
-                    onClick = { onEdit(WaterContainers.LARGE_BOTTLE) },
+                    onClick = { onEdit(WaterContainers.LARGE_BOTTLE.name) },
                     label = { Text(text = stringResource(R.string.large)) },
                     secondaryLabel = { Text(text = largeAmount)},
                     icon = {
                         Icon(painter = painterResource(id = R.drawable.water_bottle_large_24px), contentDescription = "Large water container")
+                    },
+                    colors = ChipDefaults.secondaryChipColors()
+                )
+            }
+            item {
+                Chip(
+                    onClick = { onEdit("GOAL") },
+                    label = { Text(text = stringResource(R.string.daily_goal)) },
+                    secondaryLabel = { Text(text = goalAmount) },
+                    icon = {
+                        Icon(painter = painterResource(id = R.drawable.water_bottle_large_24px), contentDescription = "Daily goal")
                     },
                     colors = ChipDefaults.secondaryChipColors()
                 )
@@ -102,5 +117,5 @@ fun PresetsScreen(
 @WearPreviewFontScales
 @Composable
 fun PresetsScreenPreview() {
-    PresetsScreen({}, {})
+    PresetsScreen({}, { _ -> })
 }
