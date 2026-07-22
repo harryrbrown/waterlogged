@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Waterlogged"
 include(":app")
- 
+include(":mobile")

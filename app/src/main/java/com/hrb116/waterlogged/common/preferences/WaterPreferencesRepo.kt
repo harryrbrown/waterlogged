@@ -15,9 +15,13 @@ fun getWaterFromCache(context: Context): WaterLog? {
         return null
     }
 
-    val water = sharedPreferences.getFloat(Preferences.WATER.key, 0.0f)
+    val cacheTime = sharedPreferences.getLong("cache_time", 0L)
+    val today = java.time.LocalDate.now()
+    val cacheDate = java.time.Instant.ofEpochMilli(cacheTime).atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+
+    val water = if (today == cacheDate) sharedPreferences.getFloat(Preferences.WATER.key, 0.0f) else 0.0f
     val waterGoal = sharedPreferences.getFloat(Preferences.WATER_GOAL.key, 0.0f)
-    val waterGoalProgress = sharedPreferences.getFloat(Preferences.WATER_GOAL_PROGRESS.key, 0.0f)
+    val waterGoalProgress = if (today == cacheDate) sharedPreferences.getFloat(Preferences.WATER_GOAL_PROGRESS.key, 0.0f) else 0.0f
 
     return WaterLog(water.toDouble(), waterGoal.toDouble(), waterGoalProgress.toDouble())
 }
@@ -26,6 +30,7 @@ fun writeWaterToCache(context: Context, waterLog: WaterLog) {
     val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     sharedPreferences.edit().putFloat(Preferences.WATER.key, waterLog.water.toFloat()).apply()
     sharedPreferences.edit().putFloat(Preferences.WATER_GOAL_PROGRESS.key, waterLog.waterGoalProgress.toFloat()).apply()
+    sharedPreferences.edit().putLong("cache_time", System.currentTimeMillis()).apply()
 }
 
 fun getWaterGoal(context: Context): Double {

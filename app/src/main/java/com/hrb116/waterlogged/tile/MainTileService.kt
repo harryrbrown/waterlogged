@@ -8,15 +8,12 @@ import com.hrb116.waterlogged.R
 import com.hrb116.waterlogged.tile.addwater.addWaterLayout
 import com.hrb116.waterlogged.tile.addwater.waterLayout
 import com.hrb116.waterlogged.tile.login.loginLayout
-import com.hrb116.waterlogged.common.tokens.getValue
-import com.hrb116.waterlogged.common.tokens.isTokenExpired
 import com.hrb116.waterlogged.common.networking.postWater
-import com.hrb116.waterlogged.common.tokens.refreshTokens
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.drawableResToImageResource
 import com.hrb116.waterlogged.common.WaterContainers
-import com.hrb116.waterlogged.common.tokens.Tokens
+import kotlinx.coroutines.tasks.await
 
 private const val RESOURCES_VERSION = "0"
 
@@ -37,15 +34,23 @@ class MainTileService : SuspendingTileService() {
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
-        val isAuthenticated = getValue(this, Tokens.ACCESS_TOKEN) != null
-        if (isTokenExpired(this)) {
-            refreshTokens(this)
+        var hasPhoneApp = false
+        try {
+            // Proactively request a sync from the phone so we have the latest Health Connect total
+            com.hrb116.waterlogged.common.networking.requestSync(this)
+            
+            val capabilityClient = com.google.android.gms.wearable.Wearable.getCapabilityClient(this)
+            val capabilityInfo = capabilityClient.getCapability("waterlogged_phone_app", com.google.android.gms.wearable.CapabilityClient.FILTER_ALL).await()
+            hasPhoneApp = capabilityInfo.nodes.isNotEmpty()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
+        var oldProgress: Double? = null
         when (requestParams.currentState.lastClickableId) {
-            "add_glass" -> postWater(this, WaterContainers.GLASS)
-            "add_bottle" -> postWater(this, WaterContainers.BOTTLE)
-            "add_large_bottle" -> postWater(this, WaterContainers.LARGE_BOTTLE)
+            "add_glass" -> oldProgress = postWater(this, WaterContainers.GLASS)
+            "add_bottle" -> oldProgress = postWater(this, WaterContainers.BOTTLE)
+            "add_large_bottle" -> oldProgress = postWater(this, WaterContainers.LARGE_BOTTLE)
         }
 
         val timeline = TimelineBuilders.Timeline.fromLayoutElement(
@@ -54,10 +59,10 @@ class MainTileService : SuspendingTileService() {
                 "bottle" -> addWaterLayout(this, WaterContainers.BOTTLE)
                 "large_bottle" -> addWaterLayout(this, WaterContainers.LARGE_BOTTLE)
                 else -> {
-                    if (isAuthenticated && !isTokenExpired(this)) {
-                        waterLayout(this, requestParams.currentState.lastClickableId == "back")
+                    if (hasPhoneApp) {
+                        com.hrb116.waterlogged.tile.addwater.waterLayout(this, requestParams.currentState.lastClickableId == "back", oldProgress)
                     } else {
-                        loginLayout(this)
+                        com.hrb116.waterlogged.tile.missingPhoneAppLayout(this)
                     }
                 }
             }

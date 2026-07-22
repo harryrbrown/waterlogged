@@ -8,6 +8,7 @@
 /.idea/navEditor.xml
 /.idea/other.xml
 /.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
 .DS_Store
 /build
 app/release
@@ -16,3 +17,5 @@ app/release
 .cxx
 local.properties
 apikeys.properties
+mobile/build
+mobile/release
