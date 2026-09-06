@@ -13,19 +13,20 @@
 
 ## Overview
 
-Waterlogged is a Wear OS Tile that allows quick and easy recording of your water intake to Fitbit, via your watch.
+Waterlogged is a Wear OS Tile that allows quick and easy recording of your water intake directly to **Health Connect**, syncing seamlessly with Google Health, Fitbit, Samsung Health, and other compatible apps.
 
 ## Features
 
-- Authenticates with Fitbit through your paired device (phone), using OAuth 2.0 PKCE
-- Once authenticated, the tile provides three buttons to quickly record your water intake, based upon Fitbit's three default water options - a glass of water (250ml / 8oz), a bottle of water (500ml / 16oz), and a large bottle (750ml / 24oz)
-- The preset water amounts are customisable in the main app
-- Additionally a progress bar around the outside of the tile indicates your progress towards your daily water goal
+- Syncs data natively and securely via Android's Health Connect APIs.
+- The tile provides three buttons to quickly record your water intake - a glass of water, a bottle of water, and a large bottle.
+- The preset water amounts and your daily goals are customisable in the companion phone app.
+- A progress bar around the outside of the tile indicates your progress towards your daily water goal.
+- Background sync resilience ensures that if you log water on your watch while away from your phone, it will seamlessly upload all your logs once Bluetooth reconnects.
 
 ## Requirements
 
-- Wear OS device paired to a phone
-- Fitbit account
+- Wear OS device paired to an Android phone
+- Health Connect installed on the phone (built-in on Android 14+)
 
 ## Installation
 
@@ -33,18 +34,28 @@ Download from [the Google Play Store](https://play.google.com/store/apps/details
 
 ## Usage
 
-1. After installing, go to the Watch app on your smartphone. Open "Tiles", tap "Add Tiles", and find Waterlogged's "Quick add water" tile. 
+1. Install the app on both your Android phone and your Wear OS watch.
+2. Open the **Waterlogged** app on your phone. You will be guided through a simple setup process to link Waterlogged with Health Connect and Google Health (exact steps may vary according to your device):
+    <br><br>
+    **Step 1:** Approve the Health Connect permissions request.
+    <br><img src="mobile/src/main/res/drawable/step1_health_connect.png" width="250px">
+    <br><br>
+    **Step 2:** Open Google Health, go to Partner Apps, and validate that you see Waterlogged as 'connected with Health Connect'.
+    <br><img src="mobile/src/main/res/drawable/step2_not_present.png" width="250px"> <img src="mobile/src/main/res/drawable/step2_present.png" width="250px">
+    <br><br>
+    **Step 3:** If you don't see it, tap 'Sync your favourite health apps' and tap through the consent forms.
+    <br><img src="mobile/src/main/res/drawable/step3_consent.png" width="250px">
+    <br><br>
+    **Step 4:** Select 'Fitness and wellness data' -> 'Nutrition' to allow Health Connect Nutrition data to sync to Google Health.
+    <br><img src="mobile/src/main/res/drawable/step4_nutrition1.png" width="200px"> <img src="mobile/src/main/res/drawable/step4_nutrition2.png" width="200px"> <img src="mobile/src/main/res/drawable/step4_nutrition3.png" width="200px">
 
-[<img src="https://github.com/user-attachments/assets/a73d7abf-e290-4f62-8386-34ce4912f9fc" width="500px">](https://github.com/user-attachments/assets/a73d7abf-e290-4f62-8386-34ce4912f9fc)
-
-2. Swipe on your watch to locate your new tile. The first time using the tile, you'll need to authenticate with Fitbit. Follow the steps on the watch and, when prompted, open your phone to complete the web sign-in.
-3. After successful authentication, the tile should now present to you the three buttons for quick recording water. You're ready to go!
-4. To edit the preset values, open the **app** on your watch (not the tile) and tap "Edit presets".
-5. If you change between oz and ml on your Fitbit account, you'll need to resync the user data to have this reflected in the tile. Open the **app** on your watch (not the tile) and tap "Refetch user data" (note that this will clear your presets).
+3. Go to the Watch app on your smartphone. Open "Tiles", tap "Add Tiles", and find Waterlogged's "Quick add water" tile. 
+4. Swipe on your watch to locate your new tile. It will present three buttons for quick recording water. You're ready to go!
+5. To edit the preset values, open the **app** on your phone to configure your glass sizes and daily goal, then tap "Sync Settings to Watch".
 
 ## Privacy and security
 
-The app does not store your Fitbit account information. The only details saved on-device are your access tokens once authenticated with Fitbit. These are required to maintain connection with Fitbit's APIs. They never leave your device.
+The app integrates with Android's Health Connect API to read and write Hydration data locally on your device. We do not transmit or store your personal health data on any external servers.
 
 ## Contributions
 
