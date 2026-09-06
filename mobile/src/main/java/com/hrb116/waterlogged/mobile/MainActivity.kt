@@ -243,6 +243,19 @@ fun SettingsScreen(onSaveSettings: (String, String, String, String) -> Unit) {
         ) {
             Text("Sync Settings to Watch")
         }
+        
+        Spacer(modifier = Modifier.weight(1f))
+        
+        val context = androidx.compose.ui.platform.LocalContext.current
+        TextButton(
+            onClick = {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://policies.google.com/privacy"))
+                context.startActivity(intent)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Privacy Policy")
+        }
     }
 }
 

@@ -42,7 +42,7 @@
     
     <!-- Guide Screen Strings -->
     <string name="guide_title">Configuration Guide</string>
-    <string name="guide_intro">Follow these steps to link Waterlogged with Health Connect and Google Health:</string>
+    <string name="guide_intro">Follow these steps to link Waterlogged with Health Connect and Google Health (exact steps may vary according to your device):</string>
     <string name="guide_step1">Step 1: Approve the Health Connect permissions request.</string>
     <string name="guide_step2">Step 2: Open Google Health, go to Partner Apps, and validate that you see Waterlogged as \'connected with Health Connect\'.</string>
     <string name="guide_step3">Step 3: If you don\'t see it, tap \'Sync your favourite health apps\' and tap through the consent forms.</string>

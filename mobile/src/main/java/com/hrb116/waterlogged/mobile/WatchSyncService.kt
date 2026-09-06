@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -39,23 +40,22 @@ class WatchSyncService : WearableListenerService() {
                 val timestamp = dataMap.getLong("timestamp", System.currentTimeMillis())
                 
                 Log.d(TAG, "Received water log: $amount $unit at $timestamp")
-                Log.d(TAG, "Received water log: $amount $unit at $timestamp")
                 
-                scope.launch {
+                kotlinx.coroutines.runBlocking {
                     try {
                         saveToHealthConnect(amount, unit, timestamp)
-                        Wearable.getDataClient(this@WatchSyncService).deleteDataItems(uri)
+                        Wearable.getDataClient(this@WatchSyncService).deleteDataItems(uri).await()
                     } catch (e: Exception) {
                         Log.e(TAG, "Error processing water log", e)
                     }
                 }
             } else if (path.startsWith("/request_sync")) {
                 Log.d(TAG, "Received sync request from watch")
-                scope.launch {
+                kotlinx.coroutines.runBlocking {
                     try {
                         val healthConnectClient = HealthConnectClient.getOrCreate(this@WatchSyncService)
                         pushDailyTotalToWatch(healthConnectClient)
-                        Wearable.getDataClient(this@WatchSyncService).deleteDataItems(uri)
+                        Wearable.getDataClient(this@WatchSyncService).deleteDataItems(uri).await()
                     } catch (e: Exception) {
                         Log.e(TAG, "Error handling sync request", e)
                     }
