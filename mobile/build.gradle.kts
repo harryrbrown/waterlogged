@@ -5,13 +5,13 @@ plugins {
 
 android {
     namespace = "com.hrb116.waterlogged"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hrb116.waterlogged"
         minSdk = 30
-        targetSdk = 35
-        versionCode = 22
+        targetSdk = 36
+        versionCode = 23
         versionName = "3.1.0"
 
         vectorDrawables {
