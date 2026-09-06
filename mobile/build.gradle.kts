@@ -11,8 +11,8 @@ android {
         applicationId = "com.hrb116.waterlogged"
         minSdk = 30
         targetSdk = 35
-        versionCode = 19
-        versionName = "3.0.2"
+        versionCode = 22
+        versionName = "3.1.0"
 
         vectorDrawables {
             useSupportLibrary = true
