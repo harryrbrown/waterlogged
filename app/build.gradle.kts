@@ -13,14 +13,14 @@ plugins {
 
 android {
     namespace = "com.hrb116.waterlogged"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hrb116.waterlogged"
         minSdk = 30
-        targetSdk = 35
-        versionCode = 15
-        versionName = "2.0.0"
+        targetSdk = 36
+        versionCode = 23
+        versionName = "3.1.0"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.horologist.compose.layout)
     implementation(libs.wear.remote.interactions)
     implementation(libs.wear.phone.interactions)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
