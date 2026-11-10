@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
@@ -31,23 +30,14 @@ import com.hrb116.waterlogged.common.WaterContainers
 import com.hrb116.waterlogged.common.preferences.getWaterUnit
 import com.hrb116.waterlogged.common.preferences.saveWaterGoal
 import com.hrb116.waterlogged.common.preferences.saveWaterPreset
-import com.hrb116.waterlogged.common.tokens.Tokens
-import com.hrb116.waterlogged.common.tokens.getValue
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun EditPresetScreen(
     container: String,
-    onSignedOut: () -> Unit,
     navController: NavController
 ) {
     val context = LocalContext.current
-    val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
-    val isAuthenticated = accessToken != null
-
-    if (!isAuthenticated) {
-        onSignedOut()
-    }
 
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
@@ -185,5 +175,5 @@ private fun backspace(curr: String): String {
 @WearPreviewFontScales
 @Composable
 fun EditPresetScreenPreview() {
-    EditPresetScreen(WaterContainers.GLASS.container, {}, NavController(LocalContext.current))
+    EditPresetScreen(WaterContainers.GLASS.container, NavController(LocalContext.current))
 }

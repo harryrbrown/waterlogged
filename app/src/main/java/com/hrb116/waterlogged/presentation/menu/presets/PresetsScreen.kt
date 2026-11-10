@@ -25,22 +25,13 @@ import com.hrb116.waterlogged.common.WaterContainers
 import com.hrb116.waterlogged.common.preferences.getLocalisedWaterVolume
 import com.hrb116.waterlogged.common.preferences.getWaterGoal
 import com.hrb116.waterlogged.common.preferences.getWaterUnit
-import com.hrb116.waterlogged.common.tokens.Tokens
-import com.hrb116.waterlogged.common.tokens.getValue
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun PresetsScreen(
-    onSignedOut: () -> Unit,
     onEdit: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val accessToken = getValue(context, Tokens.ACCESS_TOKEN)
-    val isAuthenticated = accessToken != null
-
-    if (!isAuthenticated) {
-        onSignedOut()
-    }
 
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
@@ -117,5 +108,5 @@ fun PresetsScreen(
 @WearPreviewFontScales
 @Composable
 fun PresetsScreenPreview() {
-    PresetsScreen({}, { _ -> })
+    PresetsScreen({ _ -> })
 }

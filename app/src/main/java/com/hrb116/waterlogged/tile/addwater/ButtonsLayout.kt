@@ -24,6 +24,7 @@ import com.hrb116.waterlogged.tile.previewResources
 import com.hrb116.waterlogged.common.preferences.WaterLog
 import com.hrb116.waterlogged.common.networking.getWater
 import com.hrb116.waterlogged.common.preferences.getWaterFromCache
+import com.hrb116.waterlogged.common.preferences.getWaterUnit
 import com.google.android.horologist.compose.tools.LayoutRootPreview
 import com.google.android.horologist.compose.tools.buildDeviceParameters
 import com.hrb116.waterlogged.common.WaterContainers
@@ -97,7 +98,7 @@ private fun circularProgressLayout(progress: Double, cachedProgress: Double?): C
     return builder.build()
 }
 
-fun waterLayout(context: Context, readFromCache: Boolean = false): LayoutElementBuilders.LayoutElement {
+fun waterLayout(context: Context, readFromCache: Boolean = false, oldProgress: Double? = null): LayoutElementBuilders.LayoutElement {
     val cachedWater = getWaterFromCache(context)
 
     val water = if (!readFromCache) {
@@ -111,12 +112,12 @@ fun waterLayout(context: Context, readFromCache: Boolean = false): LayoutElement
     return EdgeContentLayout.Builder(buildDeviceParameters(context.resources))
         .setResponsiveContentInsetEnabled(true)
 //        .setPrimaryLabelTextContent(
-//            Text.Builder(context, "Test ml")
-//                .setTypography(Typography.TYPOGRAPHY_CAPTION2)
-//                .setColor(ColorProp.Builder(Color.WHITE).build())
+//            androidx.wear.protolayout.material.Text.Builder(context, "${water?.water?.toInt() ?: 0} ${getWaterUnit(context) ?: "ml"}")
+//                .setTypography(androidx.wear.protolayout.material.Typography.TYPOGRAPHY_CAPTION2)
+//                .setColor(androidx.wear.protolayout.ColorBuilders.ColorProp.Builder(android.graphics.Color.WHITE).build())
 //                .build())
         .setContent(buttonsLayout(context))
-        .setEdgeContent(circularProgressLayout(water!!.waterGoalProgress, cachedWater?.waterGoalProgress))
+        .setEdgeContent(circularProgressLayout(water!!.waterGoalProgress, oldProgress ?: cachedWater?.waterGoalProgress))
         .build()
 }
 
